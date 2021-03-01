@@ -21,10 +21,7 @@ $config->setHost("https://example.com/api/v1/");
 
 $client = new Client(new Guzzle(), $config);
 $client->login("username", "password");
-
-echo $client->getAccessToken() . PHP_EOL;
-
-var_dump($client->getUser());
+$client->getUser();
 ```
 
 ## Development
