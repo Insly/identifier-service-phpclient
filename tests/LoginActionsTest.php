@@ -8,6 +8,7 @@ use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
 use Insly\Identifier\Client\Exceptions\InvalidTenantException;
 use Insly\Identifier\Client\Exceptions\NotAuthorizedException;
+use Insly\Identifier\Client\Testing\LoginMocks;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
@@ -35,12 +36,7 @@ class LoginActionsTest extends TestCase
         $client = new class(new Guzzle(), $this->config) extends Client {
             protected function sendRequest(RequestInterface $request): ResponseInterface
             {
-                $response = [
-                    "AuthenticationResult" => [
-                        "AccessToken" => "test",
-                    ],
-                ];
-
+                $response = LoginMocks::getResponse("test");
                 return new Response(200, [], json_encode($response));
             }
         };
@@ -58,16 +54,7 @@ class LoginActionsTest extends TestCase
         $client = new class(new Guzzle(), $this->config) extends Client {
             protected function sendRequest(RequestInterface $request): ResponseInterface
             {
-                $response = [
-                    "Errors" => [
-                        [
-                            "Code" => "IDS99999",
-                            "Message" => "NotAuthorizedException: Incorrect username or password.",
-                            "Params" => [],
-                        ],
-                    ],
-                ];
-
+                $response = LoginMocks::getInvalidUsernameOrPasswordResponse();
                 return new Response(400, [], json_encode($response));
             }
         };
@@ -85,16 +72,7 @@ class LoginActionsTest extends TestCase
         $client = new class(new Guzzle(), $this->config) extends Client {
             protected function sendRequest(RequestInterface $request): ResponseInterface
             {
-                $response = [
-                    "Errors" => [
-                        [
-                            "Code" => "tenant",
-                            "Message" => "pg: no rows in result set",
-                            "Params" => [],
-                        ],
-                    ],
-                ];
-
+                $response = LoginMocks::getInvalidTenantResponse();
                 return new Response(400, [], json_encode($response));
             }
         };
