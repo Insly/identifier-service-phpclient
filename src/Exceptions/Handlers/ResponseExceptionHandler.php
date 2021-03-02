@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Insly\Identifier\Client\Exceptions\Handlers;
+
+use Throwable;
+
+abstract class ResponseExceptionHandler
+{
+    /**
+     * @throws Throwable
+     */
+    public function validate(array $errors): void
+    {
+        if ($this->isErrorCodePresent($this->getCode(), $errors)) {
+            throw $this->getException();
+        }
+    }
+
+    protected function isErrorCodePresent(string $code, array $errors): bool
+    {
+        return in_array($code, array_map(fn (array $error): string => $error["Code"], $errors), true);
+    }
+
+    abstract protected function getCode(): string;
+
+    abstract protected function getException(): Throwable;
+}

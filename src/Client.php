@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Insly\Identifier\Client;
 
 use GuzzleHttp\Psr7\Request;
-use Insly\Identifier\Client\Entities\Builders\UserBuilder;
-use Insly\Identifier\Client\Entities\User;
-use Insly\Identifier\Client\Exceptions\InvalidTenantException;
-use Insly\Identifier\Client\Exceptions\NotAuthorizedException;
+use Insly\Identifier\Client\Exceptions\Handlers\InvalidTenant;
+use Insly\Identifier\Client\Exceptions\Handlers\NotAuthorized;
+use Insly\Identifier\Client\Exceptions\Handlers\ResponseExceptionHandler;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class Client
 {
@@ -34,14 +34,14 @@ class Client
 
     /**
      * @throws ClientExceptionInterface
-     * @throws NotAuthorizedException
+     * @throws Throwable
      */
-    public function login(string $username, string $password): ResponseInterface
+    public function login(): ResponseInterface
     {
         $endpoint = $this->config->getHost() . "login/" . $this->config->getTenant();
         $credentials = [
-            "username" => $username,
-            "password" => $password,
+            "username" => $this->config->getUsername(),
+            "password" => $this->config->getPassword(),
         ];
 
         $request = new Request("POST", $endpoint, [], json_encode($credentials));
@@ -49,12 +49,14 @@ class Client
         $content = json_decode($response->getBody()->getContents(), true);
 
         if ($response->getStatusCode() === Response::HTTP_BAD_REQUEST) {
-            if ($this->isErrorCodePresent("IDS99999", $content["Errors"])) {
-                throw new NotAuthorizedException();
-            }
+            $handlers = [
+                new NotAuthorized(),
+                new InvalidTenant(),
+            ];
 
-            if ($this->isErrorCodePresent("tenant", $content["Errors"])) {
-                throw new InvalidTenantException();
+            /** @var ResponseExceptionHandler $validator */
+            foreach ($handlers as $handler) {
+                $handler->validate($content["Errors"]);
             }
         }
 
@@ -63,19 +65,12 @@ class Client
         return $response;
     }
 
-    /**
-     * @throws ClientExceptionInterface
-     */
-    public function getUser(): User
+    protected function buildHeaders(...$headers): array
     {
-        $endpoint = $this->config->getHost() . "user";
-
-        $request = new Request("GET", $endpoint, [
+        return [
             "Authorization" => "Bearer " . $this->token,
-        ]);
-        $response = $this->sendRequest($request);
-
-        return UserBuilder::buildFromResponse(json_decode($response->getBody()->getContents(), true));
+            ...$headers,
+        ];
     }
 
     /**
@@ -84,10 +79,5 @@ class Client
     protected function sendRequest(RequestInterface $request): ResponseInterface
     {
         return $this->client->sendRequest($request);
-    }
-
-    protected function isErrorCodePresent(string $code, array $errors): bool
-    {
-        return in_array($code, array_map(fn (array $error): string => $error["Code"], $errors), true);
     }
 }

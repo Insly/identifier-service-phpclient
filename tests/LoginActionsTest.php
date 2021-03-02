@@ -14,8 +14,6 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-require_once __DIR__ . "/../vendor/autoload.php";
-
 class LoginActionsTest extends TestCase
 {
     protected Config $config;
@@ -23,6 +21,8 @@ class LoginActionsTest extends TestCase
     protected function setUp(): void
     {
         $this->config = new Config();
+        $this->config->setUsername("username");
+        $this->config->setPassword("password");
         $this->config->setTenant("tenant");
         $this->config->setHost("https://example.com/api/v1/");
     }
@@ -30,24 +30,25 @@ class LoginActionsTest extends TestCase
     /**
      * @throws NotAuthorizedException
      * @throws ClientExceptionInterface
+     * @throws InvalidTenantException
      */
     public function testProperAuthentication(): void
     {
         $client = new class(new Guzzle(), $this->config) extends Client {
             protected function sendRequest(RequestInterface $request): ResponseInterface
             {
-                $response = LoginMocks::getResponse("test");
+                $response = LoginMocks::getResponse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9");
                 return new Response(200, [], json_encode($response));
             }
         };
 
-        $client->login("username", "password");
-        $this->assertSame("test", $client->getAccessToken());
+        $client->login();
+        $this->assertSame("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", $client->getAccessToken());
     }
 
     /**
-     * @throws NotAuthorizedException
      * @throws ClientExceptionInterface
+     * @throws InvalidTenantException
      */
     public function testFailedByInvalidCredentialsAuthentication(): void
     {
@@ -60,7 +61,7 @@ class LoginActionsTest extends TestCase
         };
 
         $this->expectException(NotAuthorizedException::class);
-        $client->login("username", "password");
+        $client->login();
     }
 
     /**
@@ -78,6 +79,6 @@ class LoginActionsTest extends TestCase
         };
 
         $this->expectException(InvalidTenantException::class);
-        $client->login("username", "password");
+        $client->login();
     }
 }

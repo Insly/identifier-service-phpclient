@@ -6,8 +6,10 @@ namespace Insly\Identifier\Client;
 
 class Config
 {
-    protected string $tenant;
-    protected string $host;
+    protected string $tenant = "";
+    protected string $host = "";
+    protected string $username = "";
+    protected string $password = "";
 
     public function getHost(): string
     {
@@ -27,5 +29,25 @@ class Config
     public function setTenant(string $tenant): void
     {
         $this->tenant = $tenant;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): void
+    {
+        $this->username = $username;
     }
 }
