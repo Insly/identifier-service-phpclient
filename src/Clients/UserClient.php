@@ -17,9 +17,13 @@ class UserClient extends Client
      * @throws ClientExceptionInterface
      * @throws ValidationExceptionContract
      */
-    public function getUser(): User
+    public function getUser(?string $token = null): User
     {
-        $this->login();
+        if (empty($token)) {
+            $this->login();
+        } else {
+            $this->token = $token;
+        }
 
         $endpoint = $this->config->getHost() . "user";
         $request = new Request("GET", $endpoint, $this->buildHeaders());
