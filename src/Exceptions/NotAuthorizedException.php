@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Insly\Identifier\Client\Exceptions;
 
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
-class NotAuthorizedException extends Exception
+class NotAuthorizedException extends Exception implements ValidationExceptionContract
 {
-    protected $code = 400;
+    protected $code = Response::HTTP_BAD_REQUEST;
 }

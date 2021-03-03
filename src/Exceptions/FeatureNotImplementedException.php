@@ -7,7 +7,7 @@ namespace Insly\Identifier\Client\Exceptions;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
-class NoTokenException extends Exception
+class FeatureNotImplementedException extends Exception
 {
-    protected $code = Response::HTTP_BAD_REQUEST;
+    protected $code = Response::HTTP_NOT_IMPLEMENTED;
 }

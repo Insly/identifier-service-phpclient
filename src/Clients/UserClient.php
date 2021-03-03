@@ -8,16 +8,14 @@ use GuzzleHttp\Psr7\Request;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Entities\Builders\UserBuilder;
 use Insly\Identifier\Client\Entities\User;
-use Insly\Identifier\Client\Exceptions\InvalidTenantException;
-use Insly\Identifier\Client\Exceptions\NotAuthorizedException;
+use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 use Psr\Http\Client\ClientExceptionInterface;
 
 class UserClient extends Client
 {
     /**
      * @throws ClientExceptionInterface
-     * @throws NotAuthorizedException
-     * @throws InvalidTenantException
+     * @throws ValidationExceptionContract
      */
     public function getUser(): User
     {

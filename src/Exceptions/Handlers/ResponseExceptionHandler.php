@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Insly\Identifier\Client\Exceptions\Handlers;
 
-use Throwable;
+use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 
 abstract class ResponseExceptionHandler
 {
     /**
-     * @throws Throwable
+     * @throws ValidationExceptionContract
      */
     public function validate(array $errors): void
     {
@@ -25,5 +25,5 @@ abstract class ResponseExceptionHandler
 
     abstract protected function getCode(): string;
 
-    abstract protected function getException(): Throwable;
+    abstract protected function getException(): ValidationExceptionContract;
 }

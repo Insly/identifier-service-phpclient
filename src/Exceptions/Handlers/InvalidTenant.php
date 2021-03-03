@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Insly\Identifier\Client\Exceptions\Handlers;
 
 use Insly\Identifier\Client\Exceptions\InvalidTenantException;
-use Throwable;
+use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 
 class InvalidTenant extends ResponseExceptionHandler
 {
@@ -16,7 +16,7 @@ class InvalidTenant extends ResponseExceptionHandler
         return static::ERROR_CODE;
     }
 
-    protected function getException(): Throwable
+    protected function getException(): ValidationExceptionContract
     {
         return new InvalidTenantException();
     }

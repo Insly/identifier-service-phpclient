@@ -8,12 +8,12 @@ use GuzzleHttp\Psr7\Request;
 use Insly\Identifier\Client\Exceptions\Handlers\InvalidTenant;
 use Insly\Identifier\Client\Exceptions\Handlers\NotAuthorized;
 use Insly\Identifier\Client\Exceptions\Handlers\ResponseExceptionHandler;
+use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 class Client
 {
@@ -34,7 +34,7 @@ class Client
 
     /**
      * @throws ClientExceptionInterface
-     * @throws Throwable
+     * @throws ValidationExceptionContract
      */
     public function login(): ResponseInterface
     {
@@ -54,7 +54,7 @@ class Client
                 new InvalidTenant(),
             ];
 
-            /** @var ResponseExceptionHandler $validator */
+            /** @var ResponseExceptionHandler $handler */
             foreach ($handlers as $handler) {
                 $handler->validate($content["Errors"]);
             }
@@ -63,6 +63,16 @@ class Client
         $this->token = $content["AuthenticationResult"]["AccessToken"];
 
         return $response;
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     */
+    public function logout(): void
+    {
+        $endpoint = $this->config->getHost() . "logout";
+        $request = new Request("GET", $endpoint, $this->buildHeaders());
+        $this->sendRequest($request);
     }
 
     protected function buildHeaders(...$headers): array

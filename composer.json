@@ -15,7 +15,8 @@
   },
   "require-dev": {
     "blumilksoftware/codestyle": "^0.1.1",
-    "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^9.5",
+    "vlucas/phpdotenv": "^5.3"
   },
   "autoload": {
     "psr-4": {
@@ -25,7 +26,8 @@
   "scripts": {
     "ecs": "./vendor/bin/ecs check",
     "ecs-fix": "./vendor/bin/ecs check --fix",
-    "test": "./vendor/bin/phpunit tests"
+    "test": "./vendor/bin/phpunit tests/mocked",
+    "e2e": "./vendor/bin/phpunit tests/e2e"
   },
   "config": {
     "optimize-autoloader": true,
