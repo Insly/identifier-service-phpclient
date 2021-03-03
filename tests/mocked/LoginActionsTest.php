@@ -28,9 +28,7 @@ class LoginActionsTest extends TestCase
     }
 
     /**
-     * @throws NotAuthorizedException
      * @throws ClientExceptionInterface
-     * @throws InvalidTenantException
      */
     public function testProperAuthentication(): void
     {
@@ -48,7 +46,6 @@ class LoginActionsTest extends TestCase
 
     /**
      * @throws ClientExceptionInterface
-     * @throws InvalidTenantException
      */
     public function testFailedByInvalidCredentialsAuthentication(): void
     {
@@ -65,7 +62,6 @@ class LoginActionsTest extends TestCase
     }
 
     /**
-     * @throws NotAuthorizedException
      * @throws ClientExceptionInterface
      */
     public function testFailedByInvalidTenantAuthentication(): void

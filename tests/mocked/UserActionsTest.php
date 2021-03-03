@@ -6,9 +6,6 @@ use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Psr7\Response;
 use Insly\Identifier\Client\Clients\UserClient;
 use Insly\Identifier\Client\Config;
-use Insly\Identifier\Client\Exceptions\InvalidTenantException;
-use Insly\Identifier\Client\Exceptions\NotAuthorizedException;
-use Insly\Identifier\Client\Exceptions\NoTokenException;
 use Insly\Identifier\Client\Testing\LoginMocks;
 use Insly\Identifier\Client\Testing\UserMocks;
 use PHPUnit\Framework\TestCase;
@@ -31,9 +28,6 @@ class UserActionsTest extends TestCase
 
     /**
      * @throws ClientExceptionInterface
-     * @throws InvalidTenantException
-     * @throws NoTokenException
-     * @throws NotAuthorizedException
      */
     public function testHappyPath(): void
     {
@@ -60,7 +54,6 @@ class UserActionsTest extends TestCase
         };
 
         $user = $client->getUser();
-
         $this->assertSame("00000000-0000-0000-0000-000000000000", $user->getId());
     }
 }

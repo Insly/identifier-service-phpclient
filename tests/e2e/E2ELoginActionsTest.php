@@ -27,7 +27,6 @@ class E2ELoginActionsTest extends TestCase
 
     /**
      * @throws ClientExceptionInterface
-     * @throws Throwable
      */
     public function testSomething(): void
     {
