@@ -27,8 +27,8 @@ class UserClient extends Client
 
         $endpoint = $this->config->getHost() . "user";
         $request = new Request("GET", $endpoint, $this->buildHeaders());
-        $response = $this->sendRequest($request);
 
+        $response = $this->sendRequest($request);
         return UserBuilder::buildFromResponse(json_decode($response->getBody()->getContents(), true));
     }
 }

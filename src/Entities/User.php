@@ -14,6 +14,7 @@ class User
     protected string $emailVerified;
     protected string $name;
     protected string $sub;
+    protected string $calclyCustomerId;
 
     public function getId(): string
     {
@@ -93,5 +94,15 @@ class User
     public function setSub(string $sub): void
     {
         $this->sub = $sub;
+    }
+
+    public function getCalclyCustomerId(): string
+    {
+        return $this->calclyCustomerId;
+    }
+
+    public function setCalclyCustomerId(string $id): void
+    {
+        $this->calclyCustomerId = $id;
     }
 }
