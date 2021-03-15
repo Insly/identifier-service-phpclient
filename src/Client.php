@@ -13,6 +13,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\HttpFoundation\Request as RequestMethod;
 use Symfony\Component\HttpFoundation\Response;
 
 class Client
@@ -44,7 +45,7 @@ class Client
             "password" => $this->config->getPassword(),
         ];
 
-        $request = new Request("POST", $endpoint, [], json_encode($credentials));
+        $request = new Request(RequestMethod::METHOD_POST, $endpoint, [], json_encode($credentials));
         $response = $this->sendRequest($request);
         $content = json_decode($response->getBody()->getContents(), true);
 
@@ -68,10 +69,20 @@ class Client
     /**
      * @throws ClientExceptionInterface
      */
+    public function challenge(): void
+    {
+        $endpoint = $this->config->getHost() . "auth/challenge/" . $this->config->getTenant();
+        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
+        $this->sendRequest($request);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     */
     public function logout(): void
     {
         $endpoint = $this->config->getHost() . "logout";
-        $request = new Request("GET", $endpoint, $this->buildHeaders());
+        $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
     }
 

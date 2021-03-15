@@ -9,14 +9,14 @@ use Insly\Identifier\Client\Client;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request as RequestMethod;
 
-class TokenClient extends Client
+class MFAClient extends Client
 {
     /**
      * @throws ClientExceptionInterface
      */
-    public function client(): void
+    public function disable(): void
     {
-        $endpoint = $this->config->getHost() . "token/client/" . $this->config->getTenant();
+        $endpoint = $this->config->getHost() . "mfa/totp/disable";
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
     }
@@ -24,9 +24,9 @@ class TokenClient extends Client
     /**
      * @throws ClientExceptionInterface
      */
-    public function refresh(): void
+    public function enable(): void
     {
-        $endpoint = $this->config->getHost() . "token/refresh/" . $this->config->getTenant();
+        $endpoint = $this->config->getHost() . "mfa/totp/enable";
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
     }
@@ -34,9 +34,9 @@ class TokenClient extends Client
     /**
      * @throws ClientExceptionInterface
      */
-    public function update(): void
+    public function verify(): void
     {
-        $endpoint = $this->config->getHost() . "token/update/" . $this->config->getTenant();
+        $endpoint = $this->config->getHost() . "mfa/totp/verify";
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
     }

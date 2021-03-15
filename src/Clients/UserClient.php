@@ -10,6 +10,7 @@ use Insly\Identifier\Client\Entities\Builders\UserBuilder;
 use Insly\Identifier\Client\Entities\User;
 use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 use Psr\Http\Client\ClientExceptionInterface;
+use Symfony\Component\HttpFoundation\Request as RequestMethod;
 
 class UserClient extends Client
 {
@@ -26,7 +27,7 @@ class UserClient extends Client
         }
 
         $endpoint = $this->config->getHost() . "user";
-        $request = new Request("GET", $endpoint, $this->buildHeaders());
+        $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
 
         $response = $this->sendRequest($request);
         return UserBuilder::buildFromResponse(json_decode($response->getBody()->getContents(), true));
