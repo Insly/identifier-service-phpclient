@@ -20,11 +20,7 @@ class UserClient extends Client
      */
     public function getUser(?string $token = null): User
     {
-        if (empty($token)) {
-            $this->login();
-        } else {
-            $this->token = $token;
-        }
+        $this->authenticate($token);
 
         $endpoint = $this->config->getHost() . "user";
         $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());

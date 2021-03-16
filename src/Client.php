@@ -71,6 +71,8 @@ class Client
      */
     public function challenge(): void
     {
+        $this->authenticate();
+
         $endpoint = $this->config->getHost() . "auth/challenge/" . $this->config->getTenant();
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
@@ -81,6 +83,8 @@ class Client
      */
     public function logout(): void
     {
+        $this->authenticate();
+
         $endpoint = $this->config->getHost() . "logout";
         $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
@@ -100,5 +104,17 @@ class Client
     protected function sendRequest(RequestInterface $request): ResponseInterface
     {
         return $this->client->sendRequest($request);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     */
+    protected function authenticate(?string $token = null): void
+    {
+        if (empty($token)) {
+            $this->login();
+        } else {
+            $this->token = $token;
+        }
     }
 }

@@ -14,8 +14,10 @@ class PasswordClient extends Client
     /**
      * @throws ClientExceptionInterface
      */
-    public function reset(): void
+    public function reset(?string $token = null): void
     {
+        $this->authenticate($token);
+
         $endpoint = $this->config->getHost() . "password/reset/" . $this->config->getTenant();
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
@@ -24,8 +26,10 @@ class PasswordClient extends Client
     /**
      * @throws ClientExceptionInterface
      */
-    public function update(): void
+    public function update(?string $token = null): void
     {
+        $this->authenticate($token);
+
         $endpoint = $this->config->getHost() . "password/update/" . $this->config->getTenant();
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);

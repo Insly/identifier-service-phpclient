@@ -14,8 +14,10 @@ class TokenClient extends Client
     /**
      * @throws ClientExceptionInterface
      */
-    public function client(): void
+    public function client(?string $token = null): void
     {
+        $this->authenticate($token);
+
         $endpoint = $this->config->getHost() . "token/client/" . $this->config->getTenant();
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
@@ -24,8 +26,10 @@ class TokenClient extends Client
     /**
      * @throws ClientExceptionInterface
      */
-    public function refresh(): void
+    public function refresh(?string $token = null): void
     {
+        $this->authenticate($token);
+
         $endpoint = $this->config->getHost() . "token/refresh/" . $this->config->getTenant();
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
@@ -34,8 +38,10 @@ class TokenClient extends Client
     /**
      * @throws ClientExceptionInterface
      */
-    public function update(): void
+    public function update(?string $token = null): void
     {
+        $this->authenticate($token);
+
         $endpoint = $this->config->getHost() . "token/update/" . $this->config->getTenant();
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
