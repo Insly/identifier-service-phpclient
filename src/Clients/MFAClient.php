@@ -14,30 +14,52 @@ class MFAClient extends Client
     /**
      * @throws ClientExceptionInterface
      */
-    public function disable(): void
+    public function disable(string $accessToken, ?string $token = null): array
     {
+        $this->authenticate($token);
+
         $endpoint = $this->config->getHost() . "mfa/totp/disable";
-        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
-        $this->sendRequest($request);
+        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders(), [
+            "access_token" => $accessToken,
+        ]);
+        $response = $this->sendRequest($request);
+
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     /**
      * @throws ClientExceptionInterface
      */
-    public function enable(): void
+    public function enable(string $accessToken, string $qrCodeLabel, string $session, ?string $token = null): array
     {
+        $this->authenticate($token);
+
         $endpoint = $this->config->getHost() . "mfa/totp/enable";
-        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
-        $this->sendRequest($request);
+        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders(), [
+            "access_token" => $accessToken,
+            "qr_code_label" => $qrCodeLabel,
+            "session" => $session,
+        ]);
+        $response = $this->sendRequest($request);
+
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     /**
      * @throws ClientExceptionInterface
      */
-    public function verify(): void
+    public function verify(string $accessToken, string $userCode, string $session, ?string $token = null): array
     {
+        $this->authenticate($token);
+
         $endpoint = $this->config->getHost() . "mfa/totp/verify";
-        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
-        $this->sendRequest($request);
+        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders(), [
+            "access_token" => $accessToken,
+            "session" => $session,
+            "user_code" => $userCode,
+        ]);
+        $response = $this->sendRequest($request);
+
+        return json_decode($response->getBody()->getContents(), true);
     }
 }
