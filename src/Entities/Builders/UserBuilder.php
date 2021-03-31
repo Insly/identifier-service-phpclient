@@ -18,8 +18,7 @@ class UserBuilder
 
         $user->setId($userData["ID"]);
         $user->setPreferredMfaSetting($userData["PreferredMfaSetting"]);
-        $user->setAgency($userData["UserAttributes"]["custom:agency"]);
-        $user->setNetwork($userData["UserAttributes"]["custom:network"]);
+        $user->setDomain($userData["UserAttributes"]["custom:domain"] ?? "");
         $user->setCalclyCustomerId($userData["UserAttributes"]["custom:calcly_customer_id"] ?? "");
         $user->setEmail($userData["UserAttributes"]["email"]);
         $user->setEmailVerified($userData["UserAttributes"]["email_verified"]);

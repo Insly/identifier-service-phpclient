@@ -8,8 +8,7 @@ class User
 {
     protected string $id;
     protected string $preferredMfaSetting;
-    protected string $agency;
-    protected string $network;
+    protected string $domain;
     protected string $email;
     protected string $emailVerified;
     protected string $name;
@@ -36,24 +35,14 @@ class User
         $this->preferredMfaSetting = $preferredMfaSetting;
     }
 
-    public function getAgency(): string
+    public function getDomain(): string
     {
-        return $this->agency;
+        return $this->domain;
     }
 
-    public function setAgency(string $agency): void
+    public function setDomain(string $domain): void
     {
-        $this->agency = $agency;
-    }
-
-    public function getNetwork(): string
-    {
-        return $this->network;
-    }
-
-    public function setNetwork(string $network): void
-    {
-        $this->network = $network;
+        $this->domain = $domain;
     }
 
     public function getEmail(): string
