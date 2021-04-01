@@ -20,7 +20,7 @@ abstract class ResponseExceptionHandler
 
     protected function isErrorCodePresent(string $code, array $errors): bool
     {
-        return in_array($code, array_map(fn (array $error): string => $error["Code"], $errors), true);
+        return in_array($code, array_map(fn (array $error): string => $error["code"], $errors), true);
     }
 
     abstract protected function getCode(): string;

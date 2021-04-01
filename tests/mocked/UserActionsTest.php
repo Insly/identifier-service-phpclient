@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Psr7\Response;
-use Insly\Identifier\Client\Clients\UserClient;
+use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
 use Insly\Identifier\Client\Testing\LoginMocks;
 use Insly\Identifier\Client\Testing\UserMocks;
@@ -31,7 +31,7 @@ class UserActionsTest extends TestCase
      */
     public function testHappyPath(): void
     {
-        $client = new class(new Guzzle(), $this->config) extends UserClient {
+        $client = new class(new Guzzle(), $this->config) extends Client {
             protected string $flag = "";
 
             protected function sendRequest(RequestInterface $request): ResponseInterface

@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Insly\Identifier\Client\Clients;
+namespace Insly\Identifier\Client\Actions;
 
 use GuzzleHttp\Psr7\Request;
 use Insly\Identifier\Client\Client;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request as RequestMethod;
 
-class TokenClient extends Client
+/**
+ * @mixin Client
+ */
+trait TokenActions
 {
     /**
      * @throws ClientExceptionInterface
@@ -19,11 +22,16 @@ class TokenClient extends Client
         $this->authenticate($token);
 
         $endpoint = $this->config->getHost() . "token/client/" . $this->config->getTenant();
-        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders(), [
-            "client_id" => $id,
-            "client_secret" => $secret,
-            "scope" => $scope,
-        ]);
+        $request = new Request(
+            RequestMethod::METHOD_POST,
+            $endpoint,
+            $this->buildHeaders(),
+            [
+                "client_id" => $id,
+                "client_secret" => $secret,
+                "scope" => $scope,
+            ]
+        );
         $response = $this->sendRequest($request);
 
         return json_decode($response->getBody()->getContents(), true);
@@ -37,10 +45,15 @@ class TokenClient extends Client
         $this->authenticate($token);
 
         $endpoint = $this->config->getHost() . "token/refresh/" . $this->config->getTenant();
-        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders(), [
-            "refresh_token" => $refreshToken,
-            "username" => $username,
-        ]);
+        $request = new Request(
+            RequestMethod::METHOD_POST,
+            $endpoint,
+            $this->buildHeaders(),
+            [
+                "refresh_token" => $refreshToken,
+                "username" => $username,
+            ]
+        );
         $response = $this->sendRequest($request);
 
         return json_decode($response->getBody()->getContents(), true);
@@ -54,9 +67,14 @@ class TokenClient extends Client
         $this->authenticate($token);
 
         $endpoint = $this->config->getHost() . "token/validate/" . $this->config->getTenant();
-        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders(), [
-            "access_token" => $accessToken,
-        ]);
+        $request = new Request(
+            RequestMethod::METHOD_POST,
+            $endpoint,
+            $this->buildHeaders(),
+            [
+                "access_token" => $accessToken,
+            ]
+        );
         $response = $this->sendRequest($request);
 
         return json_decode($response->getBody()->getContents(), true);

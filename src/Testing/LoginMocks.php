@@ -20,7 +20,7 @@ class LoginMocks
         return [
             "errors" => [
                 [
-                    "dode" => "IDS99999",
+                    "code" => "IDS99999",
                     "message" => "NotAuthorizedException: Incorrect username or password.",
                     "params" => [],
                 ],
@@ -33,7 +33,7 @@ class LoginMocks
         return [
             "errors" => [
                 [
-                    "dode" => "tenant",
+                    "code" => "tenant",
                     "message" => "pg: no rows in result set",
                     "params" => [],
                 ],

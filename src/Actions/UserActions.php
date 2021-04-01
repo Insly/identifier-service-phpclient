@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Insly\Identifier\Client\Clients;
+namespace Insly\Identifier\Client\Actions;
 
 use GuzzleHttp\Psr7\Request;
 use Insly\Identifier\Client\Client;
@@ -12,11 +12,14 @@ use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request as RequestMethod;
 
-class UserClient extends Client
+/**
+ * @mixin Client
+ */
+trait UserActions
 {
     /**
-     * @throws ClientExceptionInterface
      * @throws ValidationExceptionContract
+     * @throws ClientExceptionInterface
      */
     public function getUser(?string $token = null): User
     {

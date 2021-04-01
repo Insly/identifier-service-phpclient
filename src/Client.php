@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Insly\Identifier\Client;
 
 use GuzzleHttp\Psr7\Request;
+use Insly\Identifier\Client\Actions\TokenActions;
+use Insly\Identifier\Client\Actions\UserActions;
+use Insly\Identifier\Client\Entities\Builders\UserBuilder;
+use Insly\Identifier\Client\Entities\User;
 use Insly\Identifier\Client\Exceptions\Handlers\InvalidTenant;
 use Insly\Identifier\Client\Exceptions\Handlers\NotAuthorized;
 use Insly\Identifier\Client\Exceptions\Handlers\ResponseExceptionHandler;
@@ -18,6 +22,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Client
 {
+    use TokenActions;
+    use UserActions;
+
     protected ClientInterface $client;
     protected Config $config;
     protected string $token = "";
@@ -57,7 +64,7 @@ class Client
 
             /** @var ResponseExceptionHandler $handler */
             foreach ($handlers as $handler) {
-                $handler->validate($content["Errors"]);
+                $handler->validate($content["errors"]);
             }
         }
 
@@ -88,6 +95,21 @@ class Client
         $endpoint = $this->config->getHost() . "logout";
         $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws ValidationExceptionContract
+     */
+    public function getUser(?string $token = null): User
+    {
+        $this->authenticate($token);
+
+        $endpoint = $this->config->getHost() . "user";
+        $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
+
+        $response = $this->sendRequest($request);
+        return UserBuilder::buildFromResponse(json_decode($response->getBody()->getContents(), true));
     }
 
     protected function buildHeaders(...$headers): array

@@ -42,7 +42,7 @@ composer require insly/identifier-service-phpclient
 declare(strict_types=1);
 
 use GuzzleHttp\Client as Guzzle;
-use Insly\Identifier\Client\Clients\UserClient;
+use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
 
 $config = new Config();
@@ -51,7 +51,7 @@ $config->setPassword("password");
 $config->setTenant("tenant");
 $config->setHost("https://example.com/api/v1/");
 
-$client = new UserClient(new Guzzle(), $config);
+$client = new Client(new Guzzle(), $config);
 $client->getUser();
 ```
 
@@ -67,23 +67,23 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as Guzzle;
 use Illuminate\Support\ServiceProvider;
-use Insly\Identifier\Client\Clients\UserClient;
+use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
 
 class CognitoServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(UserClient::class, function (): UserClient {
+        $this->app->bind(Client::class, function (): Client {
             $config = new Config();
             $config->setUsername(config("auth.cognito.username"));
             $config->setPassword(config("auth.cognito.password"));
             $config->setTenant(config("auth.cognito.tenant"));
             $config->setHost(config("auth.cognito.host"));
 
-            return new UserClient(new Client(), $config);
+            return new Client(new Guzzle(), $config);
         });
     }
 }
@@ -105,7 +105,7 @@ return [
         "tenant" => env("COGNITO_TENANT_TAG"),
         "host" => env("COGNITO_HOST"),
     ],
-]
+];
 ```
 
 ## Development
