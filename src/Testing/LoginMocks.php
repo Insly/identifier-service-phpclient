@@ -9,8 +9,8 @@ class LoginMocks
     public static function getResponse(string $token = "test"): array
     {
         return [
-            "AuthenticationResult" => [
-                "AccessToken" => $token,
+            "authentication_result" => [
+                "access_token" => $token,
             ],
         ];
     }
@@ -18,11 +18,11 @@ class LoginMocks
     public static function getInvalidUsernameOrPasswordResponse(): array
     {
         return [
-            "Errors" => [
+            "errors" => [
                 [
-                    "Code" => "IDS99999",
-                    "Message" => "NotAuthorizedException: Incorrect username or password.",
-                    "Params" => [],
+                    "dode" => "IDS99999",
+                    "message" => "NotAuthorizedException: Incorrect username or password.",
+                    "params" => [],
                 ],
             ],
         ];
@@ -31,11 +31,11 @@ class LoginMocks
     public static function getInvalidTenantResponse(): array
     {
         return [
-            "Errors" => [
+            "errors" => [
                 [
-                    "Code" => "tenant",
-                    "Message" => "pg: no rows in result set",
-                    "Params" => [],
+                    "dode" => "tenant",
+                    "message" => "pg: no rows in result set",
+                    "params" => [],
                 ],
             ],
         ];

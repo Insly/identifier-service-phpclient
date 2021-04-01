@@ -9,9 +9,9 @@ class UserMocks
     public static function getResponse(): array
     {
         return [
-            "ID" => "00000000-0000-0000-0000-000000000000",
-            "PreferredMfaSetting" => "",
-            "UserAttributes" => [
+            "id" => "00000000-0000-0000-0000-000000000000",
+            "preferred_mfa_setting" => "",
+            "user_attributes" => [
                 "custom:agency" => "agency",
                 "custom:network" => "network",
                 "email" => "user@example.com",
@@ -19,7 +19,7 @@ class UserMocks
                 "name" => "user@example.com",
                 "sub" => "00000000-0000-0000-0000-000000000000",
             ],
-            "UserMFASettingList" => [],
+            "user_mfa_setting_list" => [],
         ];
     }
 }

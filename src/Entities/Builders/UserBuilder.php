@@ -17,13 +17,12 @@ class UserBuilder
         $user = new User();
 
         $user->setId($userData["ID"]);
-        $user->setPreferredMfaSetting($userData["PreferredMfaSetting"]);
-        $user->setDomain($userData["UserAttributes"]["custom:domain"] ?? "");
-        $user->setCalclyCustomerId($userData["UserAttributes"]["custom:calcly_customer_id"] ?? "");
-        $user->setEmail($userData["UserAttributes"]["email"]);
-        $user->setEmailVerified($userData["UserAttributes"]["email_verified"]);
-        $user->setName($userData["UserAttributes"]["name"]);
-        $user->setSub($userData["UserAttributes"]["sub"]);
+        $user->setDomain($userData["user_attributes"]["custom:domain"] ?? "");
+        $user->setCalclyCustomerId($userData["user_attributes"]["custom:calcly_customer_id"] ?? "");
+        $user->setEmail($userData["user_attributes"]["email"]);
+        $user->setEmailVerified($userData["user_attributes"]["email_verified"]);
+        $user->setName($userData["user_attributes"]["name"]);
+        $user->setSub($userData["user_attributes"]["sub"]);
 
         return $user;
     }

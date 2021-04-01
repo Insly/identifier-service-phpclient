@@ -7,7 +7,6 @@ namespace Insly\Identifier\Client\Entities;
 class User
 {
     protected string $id;
-    protected string $preferredMfaSetting;
     protected string $domain;
     protected string $email;
     protected string $emailVerified;
@@ -23,16 +22,6 @@ class User
     public function setId(string $id): void
     {
         $this->id = $id;
-    }
-
-    public function getPreferredMfaSetting(): string
-    {
-        return $this->preferredMfaSetting;
-    }
-
-    public function setPreferredMfaSetting(string $preferredMfaSetting): void
-    {
-        $this->preferredMfaSetting = $preferredMfaSetting;
     }
 
     public function getDomain(): string
