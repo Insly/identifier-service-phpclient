@@ -45,11 +45,10 @@ use GuzzleHttp\Client as Guzzle;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
 
-$config = new Config();
-$config->setUsername("username");
-$config->setPassword("password");
-$config->setTenant("tenant");
-$config->setHost("https://example.com/api/v1/");
+$token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+$config = new Config("https://example.com/api/v1/", "tenant");
+$config->setToken($token);
 
 $client = new Client(new Guzzle(), $config);
 $client->getUser();
@@ -77,11 +76,8 @@ class CognitoServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(Client::class, function (): Client {
-            $config = new Config();
-            $config->setUsername(config("auth.cognito.username"));
-            $config->setPassword(config("auth.cognito.password"));
-            $config->setTenant(config("auth.cognito.tenant"));
-            $config->setHost(config("auth.cognito.host"));
+            $config = new Config("https://example.com/api/v1/", "tenant");
+            $config->setToken(config("auth.cognito.token"));
 
             return new Client(new Guzzle(), $config);
         });
@@ -100,12 +96,22 @@ declare(strict_types=1);
 return [
     // (...),
     "cognito" => [
+        "host" => env("COGNITO_HOST"),
+        "tenant" => env("COGNITO_TENANT_TAG"),
+        "token" => env("COGNITO_TOKEN"),
         "username" => env("COGNITO_USERNAME"),
         "password" => env("COGNITO_PASSWORD"),
-        "tenant" => env("COGNITO_TENANT_TAG"),
-        "host" => env("COGNITO_HOST"),
     ],
 ];
+```
+
+and `.env` file with:
+```
+COGNITO_HOST=
+COGNITO_TENANT_TAG=
+COGNITO_TOKEN=
+COGNITO_USERNAME=
+COGNITO_PASSWORD=
 ```
 
 ## Development

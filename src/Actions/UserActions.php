@@ -21,10 +21,8 @@ trait UserActions
      * @throws ValidationExceptionContract
      * @throws ClientExceptionInterface
      */
-    public function getUser(?string $token = null): User
+    public function getUser(): User
     {
-        $this->authenticate($token);
-
         $endpoint = $this->config->getHost() . "user";
         $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
 

@@ -4,20 +4,41 @@ declare(strict_types=1);
 
 namespace Insly\Identifier\Client;
 
+use Insly\Identifier\Client\Exceptions\InvalidHostFormatException;
+
 class Config
 {
     protected string $tenant = "";
     protected string $host = "";
+    protected string $token = "";
     protected string $username = "";
     protected string $password = "";
+
+    /**
+     * @throws InvalidHostFormatException
+     */
+    public function __construct(string $host, string $tenant)
+    {
+        $this->setHost($host);
+        $this->setTenant($tenant);
+    }
 
     public function getHost(): string
     {
         return $this->host;
     }
 
-    public function setHost(string $host): void
+    /**
+     * @throws InvalidHostFormatException
+     */
+    public function setHost(string $host, bool $validate = true): void
     {
+        if ($validate) {
+            if (substr($host, -1) !== "/") {
+                throw new InvalidHostFormatException("Host must be ending with slash sign.");
+            }
+        }
+
         $this->host = $host;
     }
 
@@ -29,6 +50,16 @@ class Config
     public function setTenant(string $tenant): void
     {
         $this->tenant = $tenant;
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): void
+    {
+        $this->token = $token;
     }
 
     public function getPassword(): string

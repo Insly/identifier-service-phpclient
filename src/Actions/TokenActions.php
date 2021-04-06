@@ -17,10 +17,8 @@ trait TokenActions
     /**
      * @throws ClientExceptionInterface
      */
-    public function client(string $id, string $secret, string $scope, ?string $token = null): array
+    public function client(string $id, string $secret, string $scope): array
     {
-        $this->authenticate($token);
-
         $endpoint = $this->config->getHost() . "token/client/" . $this->config->getTenant();
         $request = new Request(
             RequestMethod::METHOD_POST,
@@ -40,10 +38,8 @@ trait TokenActions
     /**
      * @throws ClientExceptionInterface
      */
-    public function refresh(string $refreshToken, string $username, ?string $token = null): array
+    public function refresh(string $refreshToken, string $username): array
     {
-        $this->authenticate($token);
-
         $endpoint = $this->config->getHost() . "token/refresh/" . $this->config->getTenant();
         $request = new Request(
             RequestMethod::METHOD_POST,
@@ -62,10 +58,8 @@ trait TokenActions
     /**
      * @throws ClientExceptionInterface
      */
-    public function validate(string $accessToken, ?string $token = null): array
+    public function validate(string $accessToken): array
     {
-        $this->authenticate($token);
-
         $endpoint = $this->config->getHost() . "token/validate/" . $this->config->getTenant();
         $request = new Request(
             RequestMethod::METHOD_POST,

@@ -18,11 +18,7 @@ class E2ELoginActionsTest extends TestCase
         $dotenv = Dotenv::createImmutable(__DIR__ . "/../../");
         $dotenv->load();
 
-        $this->config = new Config();
-        $this->config->setUsername($_ENV["USERNAME"]);
-        $this->config->setPassword($_ENV["PASSWORD"]);
-        $this->config->setTenant($_ENV["TENANT_TAG"]);
-        $this->config->setHost($_ENV["HOST"]);
+        $this->config = new Config($_ENV["HOST"], $_ENV["TENANT_TAG"]);
     }
 
     /**

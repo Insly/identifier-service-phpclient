@@ -20,11 +20,7 @@ class LoginActionsTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->config = new Config();
-        $this->config->setUsername("username");
-        $this->config->setPassword("password");
-        $this->config->setTenant("tenant");
-        $this->config->setHost("https://example.com/api/v1/");
+        $this->config = new Config("https://example.com/api/v1/", "tenant");
     }
 
     /**
