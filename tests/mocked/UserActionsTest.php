@@ -57,6 +57,7 @@ class UserActionsTest extends TestCase
     /**
      * @throws ClientExceptionInterface
      * @throws NoUserCustomDataException
+     * @throws NoTokenException
      */
     public function testRetrievingUserWithCustomData(): void
     {
