@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Request;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Entities\Builders\UserBuilder;
 use Insly\Identifier\Client\Entities\User;
+use Insly\Identifier\Client\Exceptions\NoTokenException;
 use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request as RequestMethod;
@@ -20,9 +21,12 @@ trait UserActions
     /**
      * @throws ValidationExceptionContract
      * @throws ClientExceptionInterface
+     * @throws NoTokenException
      */
     public function getUser(): User
     {
+        $this->validateToken();
+
         $endpoint = $this->config->getHost() . "user";
         $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
 

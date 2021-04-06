@@ -12,14 +12,28 @@ class UserMocks
             "id" => "00000000-0000-0000-0000-000000000000",
             "preferred_mfa_setting" => "",
             "user_attributes" => [
-                "custom:agency" => "agency",
-                "custom:network" => "network",
                 "email" => "user@example.com",
                 "email_verified" => "true",
                 "name" => "user@example.com",
                 "sub" => "00000000-0000-0000-0000-000000000000",
             ],
-            "user_mfa_setting_list" => [],
+            "user_mfa_settings" => [],
+        ];
+    }
+
+    public static function getResponseWithCustomData(): array
+    {
+        return [
+            "id" => "00000000-0000-0000-0000-000000000000",
+            "preferred_mfa_setting" => "",
+            "user_attributes" => [
+                "custom:test" => "test",
+                "email" => "user@example.com",
+                "email_verified" => "true",
+                "name" => "user@example.com",
+                "sub" => "00000000-0000-0000-0000-000000000000",
+            ],
+            "user_mfa_settings" => [],
         ];
     }
 }

@@ -7,6 +7,7 @@ namespace Insly\Identifier\Client;
 use Insly\Identifier\Client\Actions\AuthActions;
 use Insly\Identifier\Client\Actions\TokenActions;
 use Insly\Identifier\Client\Actions\UserActions;
+use Insly\Identifier\Client\Exceptions\NoTokenException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -48,5 +49,15 @@ class Client
     protected function sendRequest(RequestInterface $request): ResponseInterface
     {
         return $this->client->sendRequest($request);
+    }
+
+    /**
+     * @throws NoTokenException
+     */
+    protected function validateToken(): void
+    {
+        if (empty($this->token)) {
+            throw new NoTokenException();
+        }
     }
 }

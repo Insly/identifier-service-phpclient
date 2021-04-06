@@ -6,7 +6,8 @@ use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Psr7\Response;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
-use Insly\Identifier\Client\Testing\LoginMocks;
+use Insly\Identifier\Client\Exceptions\NoTokenException;
+use Insly\Identifier\Client\Exceptions\NoUserCustomDataException;
 use Insly\Identifier\Client\Testing\UserMocks;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -25,31 +26,74 @@ class UserActionsTest extends TestCase
     /**
      * @throws ClientExceptionInterface
      */
-    public function testHappyPath(): void
+    public function testRetrievingUserWithoutTokenProvided(): void
     {
-        $client = new class(new Guzzle(), $this->config) extends Client {
-            protected string $flag = "";
+        $client = new Client(new Guzzle(), $this->config);
 
+        $this->expectException(NoTokenException::class);
+        $client->getUser();
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     */
+    public function testRetrievingUser(): void
+    {
+        $token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        $this->config->setToken($token);
+
+        $client = new class(new Guzzle(), $this->config) extends Client {
             protected function sendRequest(RequestInterface $request): ResponseInterface
             {
-                if ($this->flag === "login") {
-                    $this->flag = "";
-                    $response = LoginMocks::getResponse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9");
-                    return new Response(200, [], json_encode($response));
-                }
-
                 $response = UserMocks::getResponse();
                 return new Response(200, [], json_encode($response));
-            }
-
-            public function login(): ResponseInterface
-            {
-                $this->flag = "login";
-                return parent::login();
             }
         };
 
         $user = $client->getUser();
         $this->assertSame("00000000-0000-0000-0000-000000000000", $user->getId());
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws NoUserCustomDataException
+     */
+    public function testRetrievingUserWithCustomData(): void
+    {
+        $token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        $this->config->setToken($token);
+
+        $client = new class(new Guzzle(), $this->config) extends Client {
+            protected function sendRequest(RequestInterface $request): ResponseInterface
+            {
+                $response = UserMocks::getResponseWithCustomData();
+                return new Response(200, [], json_encode($response));
+            }
+        };
+
+        $user = $client->getUser();
+        $this->assertSame("test", $user->getCustom("test"));
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     */
+    public function testRetrievingUserWithNoCustomData(): void
+    {
+        $token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        $this->config->setToken($token);
+
+        $client = new class(new Guzzle(), $this->config) extends Client {
+            protected function sendRequest(RequestInterface $request): ResponseInterface
+            {
+                $response = UserMocks::getResponse();
+                return new Response(200, [], json_encode($response));
+            }
+        };
+
+        $user = $client->getUser();
+
+        $this->expectException(NoUserCustomDataException::class);
+        $user->getCustom("test");
     }
 }

@@ -9,6 +9,7 @@ use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Exceptions\Handlers\InvalidTenant;
 use Insly\Identifier\Client\Exceptions\Handlers\NotAuthorized;
 use Insly\Identifier\Client\Exceptions\Handlers\ResponseExceptionHandler;
+use Insly\Identifier\Client\Exceptions\NoTokenException;
 use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -55,19 +56,12 @@ trait AuthActions
 
     /**
      * @throws ClientExceptionInterface
-     */
-    public function challenge(): void
-    {
-        $endpoint = $this->config->getHost() . "auth/challenge/" . $this->config->getTenant();
-        $request = new Request(RequestMethod::METHOD_POST, $endpoint, $this->buildHeaders());
-        $this->sendRequest($request);
-    }
-
-    /**
-     * @throws ClientExceptionInterface
+     * @throws NoTokenException
      */
     public function logout(): void
     {
+        $this->validateToken();
+
         $endpoint = $this->config->getHost() . "logout";
         $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
         $this->sendRequest($request);

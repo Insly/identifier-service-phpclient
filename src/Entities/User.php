@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Insly\Identifier\Client\Entities;
 
+use Insly\Identifier\Client\Exceptions\NoUserCustomDataException;
+
 class User
 {
     protected string $id;
-    protected string $domain;
     protected string $email;
     protected string $emailVerified;
     protected string $name;
     protected string $sub;
-    protected string $calclyCustomerId;
+    protected array $customAttributes = [];
 
     public function getId(): string
     {
@@ -22,16 +23,6 @@ class User
     public function setId(string $id): void
     {
         $this->id = $id;
-    }
-
-    public function getDomain(): string
-    {
-        return $this->domain;
-    }
-
-    public function setDomain(string $domain): void
-    {
-        $this->domain = $domain;
     }
 
     public function getEmail(): string
@@ -74,13 +65,16 @@ class User
         $this->sub = $sub;
     }
 
-    public function getCalclyCustomerId(): string
+    /**
+     * @throws NoUserCustomDataException
+     */
+    public function getCustom(string $key): string
     {
-        return $this->calclyCustomerId;
+        return $this->customAttributes[$key] ?? throw new NoUserCustomDataException();
     }
 
-    public function setCalclyCustomerId(string $id): void
+    public function setCustom(string $key, string $value): void
     {
-        $this->calclyCustomerId = $id;
+        $this->customAttributes[$key] = $value;
     }
 }
