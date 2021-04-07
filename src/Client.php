@@ -65,7 +65,7 @@ class Client
             }
         }
 
-        $this->token = $content["authentication_result"]["access_token"];
+        $this->token = $content["authentication_result"]["access_token"] ?? "";
 
         return $response;
     }
