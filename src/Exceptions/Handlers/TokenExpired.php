@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Insly\Identifier\Client\Exceptions\Handlers;
 
-use Insly\Identifier\Client\Exceptions\NotAuthorizedException;
+use Insly\Identifier\Client\Exceptions\TokenExpiredException;
 use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 
-class NotAuthorized extends ResponseExceptionHandler
+class TokenExpired extends ResponseExceptionHandler
 {
     protected const ERROR_CODE = "IDS99999";
 
@@ -18,11 +18,11 @@ class NotAuthorized extends ResponseExceptionHandler
 
     protected function getException(): ValidationExceptionContract
     {
-        return new NotAuthorizedException();
+        return new TokenExpiredException();
     }
 
     protected function getMessagePart(): string
     {
-        return "Incorrect username or password";
+        return "Access Token has expired";
     }
 }

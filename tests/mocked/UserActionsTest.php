@@ -8,6 +8,8 @@ use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
 use Insly\Identifier\Client\Exceptions\NoTokenException;
 use Insly\Identifier\Client\Exceptions\NoUserCustomDataException;
+use Insly\Identifier\Client\Exceptions\TokenExpiredException;
+use Insly\Identifier\Client\Testing\LoginMocks;
 use Insly\Identifier\Client\Testing\UserMocks;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -36,6 +38,28 @@ class UserActionsTest extends TestCase
 
     /**
      * @throws ClientExceptionInterface
+     * @throws NoTokenException
+     */
+    public function testRetrievingUserWithExpiredToken(): void
+    {
+        $token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        $this->config->setToken($token);
+
+        $client = new class(new Guzzle(), $this->config) extends Client {
+            protected function sendRequest(RequestInterface $request): ResponseInterface
+            {
+                $response = LoginMocks::getTokenExpiredResponse();
+                return new Response(401, [], json_encode($response));
+            }
+        };
+
+        $this->expectException(TokenExpiredException::class);
+        $client->getUser();
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws NoTokenException
      */
     public function testRetrievingUser(): void
     {
@@ -77,6 +101,7 @@ class UserActionsTest extends TestCase
     }
 
     /**
+     * @throws NoTokenException
      * @throws ClientExceptionInterface
      */
     public function testRetrievingUserWithNoCustomData(): void

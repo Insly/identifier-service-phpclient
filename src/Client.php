@@ -10,6 +10,7 @@ use Insly\Identifier\Client\Entities\User;
 use Insly\Identifier\Client\Exceptions\Handlers\InvalidTenant;
 use Insly\Identifier\Client\Exceptions\Handlers\NotAuthorized;
 use Insly\Identifier\Client\Exceptions\Handlers\ResponseExceptionHandler;
+use Insly\Identifier\Client\Exceptions\Handlers\TokenExpired;
 use Insly\Identifier\Client\Exceptions\NoTokenException;
 use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -51,20 +52,9 @@ class Client
 
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, [], json_encode($credentials));
         $response = $this->sendRequest($request);
+        $this->validateResponse($response, [new NotAuthorized()]);
+
         $content = json_decode($response->getBody()->getContents(), true);
-
-        if ($response->getStatusCode() === Response::HTTP_BAD_REQUEST) {
-            $handlers = [
-                new NotAuthorized(),
-                new InvalidTenant(),
-            ];
-
-            /** @var ResponseExceptionHandler $handler */
-            foreach ($handlers as $handler) {
-                $handler->validate($content["errors"]);
-            }
-        }
-
         $this->token = $content["authentication_result"]["access_token"] ?? "";
 
         return $response;
@@ -156,6 +146,8 @@ class Client
         $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
 
         $response = $this->sendRequest($request);
+        $this->validateResponse($response);
+
         return UserBuilder::buildFromResponse(json_decode($response->getBody()->getContents(), true));
     }
 
@@ -173,6 +165,24 @@ class Client
     protected function sendRequest(RequestInterface $request): ResponseInterface
     {
         return $this->client->sendRequest($request);
+    }
+
+    protected function validateResponse(ResponseInterface $response, array $handlers = []): void
+    {
+        if ($response->getStatusCode() !== Response::HTTP_OK) {
+            $content = json_decode($response->getBody()->getContents(), true);
+
+            $handlers = [
+                new TokenExpired(),
+                new InvalidTenant(),
+                ...$handlers,
+            ];
+
+            /** @var ResponseExceptionHandler $handler */
+            foreach ($handlers as $handler) {
+                $handler->validate($content["errors"]);
+            }
+        }
     }
 
     /**

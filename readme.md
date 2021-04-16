@@ -125,16 +125,3 @@ There are multiple tests with mocked responses. You can run them with:
 ```
 composer test
 ```
-
-#### e2e tests
-
-Project is equipped with a set of tests for the end to end testing. You can run them with:
-
-```
-composer e2e
-```
-
-You must remember about two mandatory conditions:
-
-* you have to be connected via Insly VPN,
-* you have to fill `.env` file basing on `.env.example` with all fields filled.
