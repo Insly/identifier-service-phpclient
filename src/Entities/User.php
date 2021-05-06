@@ -76,7 +76,7 @@ class User
      */
     public function getCustom(string $key): string
     {
-        if (!$this->customAttributes[$key]) {
+        if (!isset($this->customAttributes[$key])) {
             throw new NoUserCustomDataException();
         }
 

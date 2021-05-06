@@ -1,12 +1,7 @@
-FROM php:7.2-fpm-alpine
+ARG PHP_VERSION=7.2
 
-RUN apk update && apk add \
-    curl \
-    libzip-dev \
-    icu-dev \
-    libintl \
-    libmcrypt-dev
+FROM php:${PHP_VERSION}-fpm-alpine
 
-RUN docker-php-ext-install zip exif pcntl intl
+ARG COMPOSER_VERSION=2.0.13
 
-RUN curl -sS https://getcomposer.org/installer | php -- --version=2.0.8 --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --version="${COMPOSER_VERSION}" --install-dir=/usr/local/bin --filename=composer
