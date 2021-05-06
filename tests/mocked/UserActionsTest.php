@@ -18,7 +18,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class UserActionsTest extends TestCase
 {
-    protected Config $config;
+    /** @var Config */
+    protected $config;
 
     protected function setUp(): void
     {

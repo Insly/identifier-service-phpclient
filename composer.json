@@ -10,12 +10,13 @@
     }
   ],
   "require": {
-    "php": "^7.4|^8.0",
-    "guzzlehttp/guzzle": "^7.2"
+    "php": "^7.2",
+    "guzzlehttp/guzzle": "^7.2",
+    "symfony/http-foundation": "^5.2"
   },
   "require-dev": {
-    "blumilksoftware/codestyle": "^0.3.0",
-    "phpunit/phpunit": "^9.5",
+    "phpunit/phpunit": "^8.5",
+    "symplify/easy-coding-standard": "^8.3",
     "vlucas/phpdotenv": "^5.3"
   },
   "autoload": {

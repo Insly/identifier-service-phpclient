@@ -22,9 +22,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Client
 {
-    protected ClientInterface $client;
-    protected Config $config;
-    protected string $token = "";
+    /** @var ClientInterface */
+    protected $client;
+    /** @var Config */
+    protected $config;
+    /** @var string */
+    protected $token = "";
 
     public function __construct(ClientInterface $client, Config $config)
     {
@@ -153,10 +156,12 @@ class Client
 
     protected function buildHeaders(string ...$headers): array
     {
-        return [
-            "Authorization" => "Bearer " . $this->token,
-            ...$headers,
-        ];
+        return array_merge(
+            [
+                "Authorization" => "Bearer " . $this->token,
+            ],
+            $headers
+        );
     }
 
     /**
@@ -172,11 +177,13 @@ class Client
         if ($response->getStatusCode() !== Response::HTTP_OK) {
             $content = json_decode($response->getBody()->getContents(), true);
 
-            $handlers = [
-                new TokenExpired(),
-                new InvalidTenant(),
-                ...$handlers,
-            ];
+            $handlers = array_merge(
+                [
+                    new TokenExpired(),
+                    new InvalidTenant(),
+                ],
+                $handlers
+            );
 
             /** @var ResponseExceptionHandler $handler */
             foreach ($handlers as $handler) {

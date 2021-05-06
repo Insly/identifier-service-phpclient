@@ -16,7 +16,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class LoginActionsTest extends TestCase
 {
-    protected Config $config;
+    /** @var Config */
+    protected $config;
 
     protected function setUp(): void
     {

@@ -8,12 +8,18 @@ use Insly\Identifier\Client\Exceptions\NoUserCustomDataException;
 
 class User
 {
-    protected string $id;
-    protected string $email;
-    protected string $emailVerified;
-    protected string $name;
-    protected string $sub;
-    protected array $customAttributes = [];
+    /** @var string */
+    protected $id;
+    /** @var string */
+    protected $email;
+    /** @var string */
+    protected $emailVerified;
+    /** @var string */
+    protected $name;
+    /** @var string */
+    protected $sub;
+    /** @var array */
+    protected $customAttributes = [];
 
     public function getId(): string
     {
@@ -70,7 +76,11 @@ class User
      */
     public function getCustom(string $key): string
     {
-        return $this->customAttributes[$key] ?? throw new NoUserCustomDataException();
+        if (!$this->customAttributes[$key]) {
+            throw new NoUserCustomDataException();
+        }
+
+        return $this->customAttributes[$key];
     }
 
     public function setCustom(string $key, string $value): void
