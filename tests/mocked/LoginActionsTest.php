@@ -37,7 +37,8 @@ class LoginActionsTest extends TestCase
             }
         };
 
-        $response = $client->login();
+        $client->login();
+
         $this->assertSame("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", $client->getAccessToken());
     }
 

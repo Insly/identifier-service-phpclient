@@ -16,6 +16,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters->set(Option::SKIP, []);
 
-    $parameters->set(Option::PATHS, ["src"]);
+    $parameters->set(Option::PATHS, ["src", "tests"]);
 };
 

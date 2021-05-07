@@ -14,7 +14,7 @@ class UserBuilder
     {
     }
 
-    public static function buildFromResponse($userData): User
+    public static function buildFromResponse(array $userData): User
     {
         $user = new User();
 
