@@ -9,7 +9,7 @@ use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 
 class TokenExpired extends ResponseExceptionHandler
 {
-    protected const ERROR_CODE = "IDS99999";
+    protected const ERROR_CODE = "IDS20006";
 
     protected function getCode(): string
     {

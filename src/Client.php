@@ -7,10 +7,11 @@ namespace Insly\Identifier\Client;
 use GuzzleHttp\Psr7\Request;
 use Insly\Identifier\Client\Entities\Builders\UserBuilder;
 use Insly\Identifier\Client\Entities\User;
-use Insly\Identifier\Client\Exceptions\Handlers\InvalidTenant;
+use Insly\Identifier\Client\Exceptions\Handlers\HeaderTokenExpired;
 use Insly\Identifier\Client\Exceptions\Handlers\NotAuthorized;
 use Insly\Identifier\Client\Exceptions\Handlers\ResponseExceptionHandler;
 use Insly\Identifier\Client\Exceptions\Handlers\TokenExpired;
+use Insly\Identifier\Client\Exceptions\Handlers\UnknownError;
 use Insly\Identifier\Client\Exceptions\NoTokenException;
 use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -173,8 +174,9 @@ class Client
             $content = json_decode($response->getBody()->getContents(), true);
 
             $handlers = [
+                new HeaderTokenExpired(),
                 new TokenExpired(),
-                new InvalidTenant(),
+                new UnknownError(),
                 ...$handlers,
             ];
 
