@@ -65,15 +65,20 @@ class User
         $this->sub = $sub;
     }
 
+    public function getCustom(string $key): string|int|null
+    {
+        return $this->customAttributes[$key] ?? null;
+    }
+
     /**
      * @throws NoUserCustomDataException
      */
-    public function getCustom(string $key): string
+    public function getRequiredCustom(string $key): string|int
     {
         return $this->customAttributes[$key] ?? throw new NoUserCustomDataException();
     }
 
-    public function setCustom(string $key, string $value): void
+    public function setCustom(string $key, string|int $value): void
     {
         $this->customAttributes[$key] = $value;
     }
