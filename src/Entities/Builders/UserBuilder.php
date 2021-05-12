@@ -17,7 +17,6 @@ class UserBuilder
         $user = new User();
 
         $user->setId($userData["id"]);
-        $user->setCustom("calcly_customer_id", $userData["user_attributes"]["custom:calcly_customer_id"] ?? "");
         $user->setEmail($userData["user_attributes"]["email"]);
         $user->setEmailVerified($userData["user_attributes"]["email_verified"]);
         $user->setName($userData["user_attributes"]["name"]);
