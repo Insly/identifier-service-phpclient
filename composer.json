@@ -24,8 +24,8 @@
     }
   },
   "scripts": {
-    "ecs": "./vendor/bin/ecs check",
-    "ecsf": "./vendor/bin/ecs check --fix",
+    "ecs": "./vendor/bin/ecs check --clear-cache",
+    "ecsf": "./vendor/bin/ecs check --clear-cache --fix",
     "test": "./vendor/bin/phpunit tests/mocked",
     "e2e": "./vendor/bin/phpunit tests/e2e"
   },

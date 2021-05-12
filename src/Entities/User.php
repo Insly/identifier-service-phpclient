@@ -8,6 +8,8 @@ use Insly\Identifier\Client\Exceptions\NoUserCustomDataException;
 
 class User
 {
+    public const CUSTOM_PREFIX = "custom:";
+
     protected string $id;
     protected string $email;
     protected string $emailVerified;
@@ -67,7 +69,7 @@ class User
 
     public function getCustom(string $key): ?string
     {
-        return $this->customAttributes[$key] ?? null;
+        return $this->customAttributes[static::CUSTOM_PREFIX . $key] ?? null;
     }
 
     /**
@@ -75,7 +77,7 @@ class User
      */
     public function getRequiredCustom(string $key): string
     {
-        return $this->customAttributes[$key] ?? throw new NoUserCustomDataException();
+        return $this->getCustom($key) ?? throw new NoUserCustomDataException();
     }
 
     public function setCustom(string $key, string $value): void

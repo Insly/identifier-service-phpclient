@@ -8,8 +8,6 @@ use Insly\Identifier\Client\Entities\User;
 
 class UserBuilder
 {
-    protected const CUSTOM_PREFIX = "custom:";
-
     protected function __construct()
     {
     }
@@ -27,12 +25,11 @@ class UserBuilder
 
         $attributes = array_filter(
             $userData["user_attributes"],
-            fn(string $value, string $key): bool => str_starts_with($key, static::CUSTOM_PREFIX),
+            fn(string $value, string $key): bool => str_starts_with($key, User::CUSTOM_PREFIX),
             ARRAY_FILTER_USE_BOTH
         );
 
         foreach ($attributes as $key => $value) {
-            $key = str_replace(static::CUSTOM_PREFIX, "", $key);
             $user->setCustom($key, $value);
         }
 
