@@ -1,0 +1,36 @@
+{
+  "name": "insly/identifier-service-phpclient",
+  "description": "Identifier Service PHP Client",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Krzysztof Rewak",
+      "email": "krzysztof.rewak@blumilk.pl"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "guzzlehttp/guzzle": "^7.2"
+  },
+  "require-dev": {
+    "blumilksoftware/codestyle": "^0.4",
+    "phpunit/phpunit": "^9.5",
+    "vlucas/phpdotenv": "^5.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Insly\\Identifier\\Client\\": "src/"
+    }
+  },
+  "scripts": {
+    "ecs": "./vendor/bin/ecs check --clear-cache",
+    "ecsf": "./vendor/bin/ecs check --clear-cache --fix",
+    "test": "./vendor/bin/phpunit tests/mocked",
+    "e2e": "./vendor/bin/phpunit tests/e2e"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
+}
