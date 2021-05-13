@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Insly\Identifier\Client;
 
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Insly\Identifier\Client\Entities\Builders\UserBuilder;
 use Insly\Identifier\Client\Entities\User;
@@ -14,8 +16,6 @@ use Insly\Identifier\Client\Exceptions\Handlers\TokenExpired;
 use Insly\Identifier\Client\Exceptions\Handlers\UnknownError;
 use Insly\Identifier\Client\Exceptions\NoTokenException;
 use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Request as RequestMethod;
