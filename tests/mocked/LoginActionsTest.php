@@ -6,8 +6,8 @@ use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Psr7\Response;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
-use Insly\Identifier\Client\Exceptions\InvalidTenantException;
 use Insly\Identifier\Client\Exceptions\NotAuthorizedException;
+use Insly\Identifier\Client\Exceptions\UnknownErrorException;
 use Insly\Identifier\Client\Testing\LoginMocks;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -72,7 +72,7 @@ class LoginActionsTest extends TestCase
             }
         };
 
-        $this->expectException(InvalidTenantException::class);
+        $this->expectException(UnknownErrorException::class);
         $client->login();
     }
 }

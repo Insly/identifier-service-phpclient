@@ -7,14 +7,15 @@ namespace Insly\Identifier\Client;
 use GuzzleHttp\Psr7\Request;
 use Insly\Identifier\Client\Entities\Builders\UserBuilder;
 use Insly\Identifier\Client\Entities\User;
-use Insly\Identifier\Client\Exceptions\Handlers\InvalidTenant;
+use Insly\Identifier\Client\Exceptions\Handlers\HeaderTokenExpired;
 use Insly\Identifier\Client\Exceptions\Handlers\NotAuthorized;
 use Insly\Identifier\Client\Exceptions\Handlers\ResponseExceptionHandler;
 use Insly\Identifier\Client\Exceptions\Handlers\TokenExpired;
+use Insly\Identifier\Client\Exceptions\Handlers\UnknownError;
 use Insly\Identifier\Client\Exceptions\NoTokenException;
 use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Client\ClientInterface;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Request as RequestMethod;
@@ -42,7 +43,7 @@ class Client
     }
 
     /**
-     * @throws ClientExceptionInterface
+     * @throws GuzzleException
      * @throws ValidationExceptionContract
      */
     public function login(): ResponseInterface
@@ -64,7 +65,7 @@ class Client
     }
 
     /**
-     * @throws ClientExceptionInterface
+     * @throws GuzzleException
      * @throws NoTokenException
      */
     public function logout(): void
@@ -77,7 +78,7 @@ class Client
     }
 
     /**
-     * @throws ClientExceptionInterface
+     * @throws GuzzleException
      */
     public function client(string $id, string $secret, string $scope): array
     {
@@ -98,7 +99,7 @@ class Client
     }
 
     /**
-     * @throws ClientExceptionInterface
+     * @throws GuzzleException
      */
     public function refresh(string $refreshToken, string $username): array
     {
@@ -118,7 +119,7 @@ class Client
     }
 
     /**
-     * @throws ClientExceptionInterface
+     * @throws GuzzleException
      */
     public function validate(string $accessToken): array
     {
@@ -138,7 +139,7 @@ class Client
 
     /**
      * @throws ValidationExceptionContract
-     * @throws ClientExceptionInterface
+     * @throws GuzzleException
      * @throws NoTokenException
      */
     public function getUser(): User
@@ -165,11 +166,11 @@ class Client
     }
 
     /**
-     * @throws ClientExceptionInterface
+     * @throws GuzzleException
      */
     protected function sendRequest(RequestInterface $request): ResponseInterface
     {
-        return $this->client->sendRequest($request);
+        return $this->client->send($request);
     }
 
     protected function validateResponse(ResponseInterface $response, array $handlers = []): void
@@ -179,8 +180,9 @@ class Client
 
             $handlers = array_merge(
                 [
+                    new HeaderTokenExpired(),
                     new TokenExpired(),
-                    new InvalidTenant(),
+                    new UnknownError(),
                 ],
                 $handlers
             );

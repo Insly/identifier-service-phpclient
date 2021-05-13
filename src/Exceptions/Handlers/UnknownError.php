@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Insly\Identifier\Client\Exceptions\Handlers;
 
-use Insly\Identifier\Client\Exceptions\InvalidTenantException;
+use Insly\Identifier\Client\Exceptions\UnknownErrorException;
 use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 
-class InvalidTenant extends ResponseExceptionHandler
+class UnknownError extends ResponseExceptionHandler
 {
-    protected const ERROR_CODE = "tenant";
+    protected const ERROR_CODE = "IDS99999";
 
     protected function getCode(): string
     {
@@ -18,6 +18,6 @@ class InvalidTenant extends ResponseExceptionHandler
 
     protected function getException(): ValidationExceptionContract
     {
-        return new InvalidTenantException();
+        return new UnknownErrorException();
     }
 }
