@@ -1,11 +1,21 @@
 <?php
 
-declare(strict_types=1);
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symplify\EasyCodingStandard\ValueObject\Option;
+use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-use Blumilk\Codestyle\Config;
-use Blumilk\Codestyle\Configuration\Defaults\Paths;
+return static function (ContainerConfigurator $containerConfigurator): void {
+    $parameters = $containerConfigurator->parameters();
 
-$paths = new Paths("src", "tests");
-$config = new Config($paths);
+    $parameters->set(Option::SETS, [
+        SetList::PSR_12,
+        SetList::PHP_70,
+        SetList::PHP_71,
+        SetList::CLEAN_CODE,
+    ]);
 
-return $config->config();
+    $parameters->set(Option::SKIP, []);
+
+    $parameters->set(Option::PATHS, ["src", "tests"]);
+};
+

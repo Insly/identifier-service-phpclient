@@ -22,7 +22,11 @@ abstract class ResponseExceptionHandler
 
     protected function isErrorCodePresent(string $code, array $errors): bool
     {
-        return in_array($code, array_map(fn(array $error): string => $error["code"], $errors), true);
+        $codes = array_map(function (array $error): string {
+            return $error["code"];
+        }, $errors);
+
+        return in_array($code, $codes, true);
     }
 
     protected function getMessagePart(): string
@@ -32,7 +36,14 @@ abstract class ResponseExceptionHandler
 
     protected function isMessagePresent(string $part, array $errors): bool
     {
-        foreach (array_map(fn(array $error): string => $error["message"], $errors) as $message) {
+        $messages = array_map(
+            function (array $error): string {
+                return $error["message"];
+            },
+            $errors
+        );
+
+        foreach ($messages as $message) {
             if (str_contains($message, $part)) {
                 return true;
             }

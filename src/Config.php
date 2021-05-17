@@ -8,11 +8,16 @@ use Insly\Identifier\Client\Exceptions\InvalidHostFormatException;
 
 class Config
 {
-    protected string $tenant = "";
-    protected string $host = "";
-    protected string $token = "";
-    protected string $username = "";
-    protected string $password = "";
+    /** @var string */
+    protected $tenant = "";
+    /** @var string */
+    protected $host = "";
+    /** @var string */
+    protected $token = "";
+    /** @var string */
+    protected $username = "";
+    /** @var string */
+    protected $password = "";
 
     /**
      * @throws InvalidHostFormatException

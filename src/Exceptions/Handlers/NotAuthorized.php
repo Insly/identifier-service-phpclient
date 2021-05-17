@@ -9,7 +9,7 @@ use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
 
 class NotAuthorized extends ResponseExceptionHandler
 {
-    protected const ERROR_CODE = "IDS99999";
+    protected const ERROR_CODE = "IDS10017";
 
     protected function getCode(): string
     {

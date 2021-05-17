@@ -20,7 +20,7 @@ class LoginMocks
         return [
             "errors" => [
                 [
-                    "code" => "IDS99999",
+                    "code" => "IDS10017",
                     "message" => "NotAuthorizedException: Incorrect username or password.",
                     "params" => [],
                 ],
@@ -33,7 +33,7 @@ class LoginMocks
         return [
             "errors" => [
                 [
-                    "code" => "IDS99999",
+                    "code" => "IDS10017",
                     "message" => "NotAuthorizedException: Access Token has expired",
                     "params" => [],
                 ],
@@ -46,7 +46,7 @@ class LoginMocks
         return [
             "errors" => [
                 [
-                    "code" => "tenant",
+                    "code" => "IDS99999",
                     "message" => "pg: no rows in result set",
                     "params" => [],
                 ],
