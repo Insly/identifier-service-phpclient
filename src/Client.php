@@ -87,11 +87,11 @@ class Client
             RequestMethod::METHOD_POST,
             $endpoint,
             $this->buildHeaders(),
-            [
+            \GuzzleHttp\json_encode([
                 "client_id" => $id,
                 "client_secret" => $secret,
                 "scope" => $scope,
-            ]
+            ])
         );
         $response = $this->sendRequest($request);
 
@@ -108,10 +108,10 @@ class Client
             RequestMethod::METHOD_POST,
             $endpoint,
             $this->buildHeaders(),
-            [
+            \GuzzleHttp\json_encode([
                 "refresh_token" => $refreshToken,
                 "username" => $username,
-            ]
+            ])
         );
         $response = $this->sendRequest($request);
 
@@ -128,9 +128,9 @@ class Client
             RequestMethod::METHOD_POST,
             $endpoint,
             $this->buildHeaders(),
-            [
+            \GuzzleHttp\json_encode([
                 "access_token" => $accessToken,
-            ]
+            ])
         );
         $response = $this->sendRequest($request);
 
