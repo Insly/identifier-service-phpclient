@@ -24,10 +24,10 @@ class UserBuilder
 
         $attributes = array_filter(
             $userData["user_attributes"],
-            function (string $value, string $key): bool {
-                return str_starts_with($key, User::CUSTOM_PREFIX);
+            function (string $key): bool {
+                return 0 === strncmp($key, User::CUSTOM_PREFIX, \strlen(User::CUSTOM_PREFIX));
             },
-            ARRAY_FILTER_USE_BOTH
+            ARRAY_FILTER_USE_KEY
         );
 
         foreach ($attributes as $key => $value) {
