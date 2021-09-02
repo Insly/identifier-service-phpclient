@@ -84,11 +84,13 @@ class Client
             RequestMethod::METHOD_POST,
             $endpoint,
             $this->buildHeaders(),
-            [
-                "client_id" => $id,
-                "client_secret" => $secret,
-                "scope" => $scope,
-            ]
+            json_encode(
+                [
+                    "client_id" => $id,
+                    "client_secret" => $secret,
+                    "scope" => $scope,
+                ]
+            )
         );
         $response = $this->sendRequest($request);
 
@@ -125,9 +127,11 @@ class Client
             RequestMethod::METHOD_POST,
             $endpoint,
             $this->buildHeaders(),
-            [
-                "access_token" => $accessToken,
-            ]
+            json_encode(
+                [
+                    "access_token" => $accessToken,
+                ]
+            ),
         );
         $response = $this->sendRequest($request);
 
