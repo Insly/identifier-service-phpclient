@@ -147,7 +147,7 @@ class Client
     {
         $this->validateToken();
 
-        $endpoint = $this->config->getHost() . "user";
+        $endpoint = $this->config->getHost() . "user/" . $this->config->getTenant();
         $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
 
         $response = $this->sendRequest($request);
