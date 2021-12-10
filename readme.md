@@ -129,6 +129,8 @@ make run
 
 # enter container shell
 make shell
+# in container shell
+composer install
 
 # stop container
 make stop
@@ -137,6 +139,13 @@ make stop
 If you don't have `make`, then check _Makefile_ for used commands.
 
 ### Testing
+
+#### Troubleshoots
+
+If you have problems with tests, try to remove:
+- vendor
+- composer.lock
+- .composer
 
 #### Basic tests
 
@@ -162,3 +171,5 @@ make test-php-version
 The default version is `8.0` - defined in the Makefile. You can define other version in `.env` file, just add: e.g. `TESTS_PHP_VERSION=7.2`\
 You can also specify `APP_DIR` in `.env` file, which is used in _test-php-version_ command.\
 Otherwise, default value defined in the Makefile will be used.
+
+Remember to remove `composer.lock` and rerun `composer install` after testing, cause tests reinstall composer packages. 

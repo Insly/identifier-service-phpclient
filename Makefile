@@ -3,10 +3,10 @@ include .env
 PHP_SERVICE_NAME = php
 APP_DIR ?= $(shell pwd)
 TESTS_PHP_VERSION ?= 8.0
+CURRENT_UID ?= 1000
 
 .PHONY: shell
 shell:
-	run
 	docker-compose exec ${PHP_SERVICE_NAME} ash
 
 .PHONY: run
@@ -23,7 +23,7 @@ build:
 
 .PHONY: test
 test:
-	docker-compose run --rm ${PHP_SERVICE_NAME} ash -c "composer install && composer test"
+	docker-compose run --rm ${PHP_SERVICE_NAME} ash -c "rm composer.lock; composer install && composer test"
 
 test-php-version:
-	docker run --rm -it -v ${APP_DIR}:/app -w /app webdevops/php:${TESTS_PHP_VERSION}-alpine bash -c "composer install && composer test"
+	docker run --rm --user ${CURRENT_UID} --volume ${APP_DIR}:/app --workdir /app jakzal/phpqa:php${TESTS_PHP_VERSION}-alpine ash -c "rm composer.lock; composer install && composer test"
