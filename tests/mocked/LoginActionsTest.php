@@ -6,8 +6,9 @@ use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Psr7\Response;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
-use Insly\Identifier\Client\Exceptions\NotAuthorizedException;
-use Insly\Identifier\Client\Exceptions\UnknownErrorException;
+use Insly\Identifier\Client\Exceptions\ExtractResponseException;
+use Insly\Identifier\Client\Exceptions\IdentifierService\NotAuthorizedException;
+use Insly\Identifier\Client\Exceptions\IdentifierService\UndefinedErrorException;
 use Insly\Identifier\Client\Testing\LoginMocks;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -25,6 +26,8 @@ class LoginActionsTest extends TestCase
 
     /**
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws JsonException
      */
     public function testProperAuthentication(): void
     {
@@ -42,6 +45,8 @@ class LoginActionsTest extends TestCase
 
     /**
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws JsonException
      */
     public function testFailedByInvalidCredentialsAuthentication(): void
     {
@@ -59,6 +64,8 @@ class LoginActionsTest extends TestCase
 
     /**
      * @throws ClientExceptionInterface
+     * @throws JsonException
+     * @throws ExtractResponseException
      */
     public function testFailedByInvalidTenantAuthentication(): void
     {
@@ -70,7 +77,7 @@ class LoginActionsTest extends TestCase
             }
         };
 
-        $this->expectException(UnknownErrorException::class);
+        $this->expectException(UndefinedErrorException::class);
         $client->login();
     }
 }
