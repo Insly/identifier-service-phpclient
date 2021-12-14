@@ -63,7 +63,7 @@ class IdentifierResponseHandler
 
         $exception = $this->getExceptionForErrorCode($errorCode);
         $exceptionDetails = $this->createDetails($error);
-        
+
         throw $exception->setDetails($exceptionDetails)->setCode($response->getStatusCode());
     }
 

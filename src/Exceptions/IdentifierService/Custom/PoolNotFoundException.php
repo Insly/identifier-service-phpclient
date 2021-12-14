@@ -6,5 +6,4 @@ namespace Insly\Identifier\Client\Exceptions\IdentifierService\Custom;
 
 class PoolNotFoundException extends BaseCustomIdentifierException
 {
-
 }

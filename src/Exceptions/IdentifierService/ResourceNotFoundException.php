@@ -6,5 +6,4 @@ namespace Insly\Identifier\Client\Exceptions\IdentifierService;
 
 class ResourceNotFoundException extends BaseIdentifierException
 {
-
 }

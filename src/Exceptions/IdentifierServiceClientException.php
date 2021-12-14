@@ -19,15 +19,15 @@ class IdentifierServiceClientException extends Exception
     public function setDetails(array $details): static
     {
         $detailsJson = json_encode($details, flags: JSON_THROW_ON_ERROR);
-        $this->message .= " [Details: $detailsJson]";
+        $this->message .= " [Details: ${detailsJson}]";
 
         return $this;
     }
-    
+
     public function setCode(int $statusCode): static
     {
         $this->code = $statusCode;
-        
+
         return $this;
     }
 }

@@ -94,7 +94,7 @@ class Client
                     "scope" => $scope,
                 ],
                 flags: JSON_THROW_ON_ERROR,
-            )
+            ),
         );
         $response = $this->sendRequest($request);
         $this->validateResponse($response);

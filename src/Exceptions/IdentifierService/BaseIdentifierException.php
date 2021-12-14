@@ -8,5 +8,4 @@ use Insly\Identifier\Client\Exceptions\IdentifierServiceClientException;
 
 abstract class BaseIdentifierException extends IdentifierServiceClientException
 {
-
 }
