@@ -2,9 +2,14 @@ version: "3.8"
 
 services:
   php:
-    image: ghcr.io/blumilksoftware/php:8.0
+    build:
+      context: ./docker/php
+      args:
+        INSTALL_XDEBUG: ${INSTALL_XDEBUG}
     container_name: identifier-php
     working_dir: /application
     user: ${CURRENT_UID:-1000}
+    extra_hosts:
+      - host.docker.internal:host-gateway
     volumes:
       - .:/application

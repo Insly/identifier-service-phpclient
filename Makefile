@@ -19,7 +19,7 @@ stop:
 
 .PHONY: build
 build:
-	docker-compose pull
+	docker-compose build --pull
 
 .PHONY: test
 test:
