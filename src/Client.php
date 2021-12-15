@@ -37,9 +37,11 @@ class Client
     }
 
     /**
+     * @return ResponseInterface
      * @throws ClientExceptionInterface
-     * @throws JsonException
      * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
      */
     public function login(): ResponseInterface
     {
@@ -61,8 +63,10 @@ class Client
 
     /**
      * @throws ClientExceptionInterface
-     * @throws NoTokenException
      * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
+     * @throws NoTokenException
      */
     public function logout(): void
     {
@@ -77,8 +81,9 @@ class Client
 
     /**
      * @throws ClientExceptionInterface
-     * @throws JsonException
      * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
      */
     public function client(string $id, string $secret, string $scope): array
     {
@@ -105,6 +110,8 @@ class Client
     /**
      * @throws ClientExceptionInterface
      * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
      */
     public function refresh(string $refreshToken, string $username): array
     {
@@ -126,8 +133,9 @@ class Client
 
     /**
      * @throws ClientExceptionInterface
-     * @throws JsonException
      * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
      */
     public function validate(string $accessToken): array
     {
@@ -151,8 +159,10 @@ class Client
 
     /**
      * @throws ClientExceptionInterface
-     * @throws NoTokenException
      * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
+     * @throws NoTokenException
      */
     public function getUser(): User
     {
