@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Response;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
+use Insly\Identifier\Client\Exceptions\ExtractResponseException;
 use Insly\Identifier\Client\Testing\TestCase;
 
 class ClientTest extends TestCase
@@ -21,10 +23,10 @@ class ClientTest extends TestCase
         ];
 
         $client = new Client(new GuzzleClient(), new Config("host", "tenant"));
-        $method = $this->getProtectedMethod(Client::class, "buildHeaders");
+        $buildHeadersMethod = $this->getProtectedMethod(Client::class, "buildHeaders");
 
         // when
-        $preparedHeaders = $method->invokeArgs($client, ["headers" => $additionalHeaders]);
+        $preparedHeaders = $buildHeadersMethod->invokeArgs($client, ["headers" => $additionalHeaders]);
 
         // then
         $expectedHeaders = [
@@ -46,10 +48,10 @@ class ClientTest extends TestCase
         $config->setToken("testToken");
 
         $client = new Client(new GuzzleClient(), $config);
-        $method = $this->getProtectedMethod(Client::class, "buildHeaders");
+        $buildHeadersMethod = $this->getProtectedMethod(Client::class, "buildHeaders");
 
         // when
-        $preparedHeaders = $method->invoke($client);
+        $preparedHeaders = $buildHeadersMethod->invoke($client);
 
         // then
         $expectedHeaders = [
@@ -57,6 +59,38 @@ class ClientTest extends TestCase
         ];
 
         $this->assertHeaders($expectedHeaders, $preparedHeaders);
+    }
+
+    public function testValidResponseIsExtractedCorrectly(): void
+    {
+        // given
+        $validResponse = new Response(status: 200, headers: [], body: json_encode(["test" => "value"]));
+
+        $client = new Client(new GuzzleClient(), new Config("host", "tenant"));
+        $extractResponseMethod = $this->getProtectedMethod(Client::class, "extractResponse");
+
+        // when
+        $responseContent = $extractResponseMethod->invokeArgs($client, ["response" => $validResponse]);
+
+        // then
+        $this->assertIsArray($responseContent);
+        $this->arrayHasKey("test");
+    }
+
+    public function testProperExceptionIsThrownDuringResponseExtracting(): void
+    {
+        // given
+        $validResponse = new Response(status: 200, headers: [], body: null);
+
+        $client = new Client(new GuzzleClient(), new Config("host", "tenant"));
+        $extractResponseMethod = $this->getProtectedMethod(Client::class, "extractResponse");
+
+        // then
+        $this->expectException(ExtractResponseException::class);
+        $this->expectExceptionMessage("An error occurred during retrieving response from the Identifier service.");
+
+        // when
+        $extractResponseMethod->invokeArgs($client, ["response" => $validResponse]);
     }
 
     protected function assertHeaders(array $expectedHeaders, array $preparedHeaders): void
