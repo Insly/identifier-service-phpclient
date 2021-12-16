@@ -74,7 +74,7 @@ class ClientTest extends TestCase
 
         // then
         $this->assertIsArray($responseContent);
-        $this->arrayHasKey("test");
+        $this->assertArrayHasKey("test", $responseContent);
     }
 
     public function testProperExceptionIsThrownDuringResponseExtracting(): void
