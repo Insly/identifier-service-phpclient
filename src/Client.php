@@ -177,12 +177,12 @@ class Client
         return UserBuilder::buildFromResponse($this->extractResponse($response));
     }
 
-    protected function buildHeaders(string ...$headers): array
+    protected function buildHeaders(array $headers = []): array
     {
-        return [
-            "Authorization" => "Bearer " . $this->token,
-            ...$headers,
-        ];
+        return array_merge(
+            ["Authorization" => "Bearer " . $this->token,],
+            $headers,
+        );
     }
 
     /**
