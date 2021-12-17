@@ -77,6 +77,7 @@ class CognitoServiceProvider extends ServiceProvider
     {
         $this->app->bind(Client::class, function (): Client {
             $config = new Config("https://example.com/api/v1/", "tenant");
+            $request = request();
             
             $authorizationHeader = $request?->header("Authorization") ?? "";
             $token = str_replace("Bearer ", "", $authorizationHeader);
