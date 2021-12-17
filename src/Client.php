@@ -37,7 +37,6 @@ class Client
     }
 
     /**
-     * @return ResponseInterface
      * @throws ClientExceptionInterface
      * @throws ExtractResponseException
      * @throws IdentifierServiceClientException
@@ -180,7 +179,9 @@ class Client
     protected function buildHeaders(array $headers = []): array
     {
         return array_merge(
-            ["Authorization" => "Bearer " . $this->token,],
+            [
+                "Authorization" => "Bearer " . $this->token,
+            ],
             $headers,
         );
     }

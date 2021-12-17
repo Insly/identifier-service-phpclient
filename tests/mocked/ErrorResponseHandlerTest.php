@@ -65,7 +65,9 @@ class ErrorResponseHandlerTest extends TestCase
         $validateResponseMethod = $this->getProtectedMethod(Client::class, "validateResponse");
 
         // when
-        $validateResponseMethod->invokeArgs($client, ["response" => $response]);
+        $validateResponseMethod->invokeArgs($client, [
+            "response" => $response,
+        ]);
 
         // then
         $this->expectNotToPerformAssertions();
@@ -87,7 +89,9 @@ class ErrorResponseHandlerTest extends TestCase
         $this->expectException(UndefinedErrorCodeException::class);
 
         // when
-        $validateResponseMethod->invokeArgs($client, ["response" => $response]);
+        $validateResponseMethod->invokeArgs($client, [
+            "response" => $response,
+        ]);
     }
 
     /**
@@ -109,7 +113,9 @@ class ErrorResponseHandlerTest extends TestCase
         $this->expectExceptionMessageMatches($errorCodeRegex);
 
         // when
-        $validateResponseMethod->invokeArgs($client, ["response" => $response]);
+        $validateResponseMethod->invokeArgs($client, [
+            "response" => $response,
+        ]);
     }
 
     public function provideErrorCodesWithExceptionsAndResponses(): Generator

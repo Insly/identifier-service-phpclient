@@ -26,7 +26,9 @@ class ClientTest extends TestCase
         $buildHeadersMethod = $this->getProtectedMethod(Client::class, "buildHeaders");
 
         // when
-        $preparedHeaders = $buildHeadersMethod->invokeArgs($client, ["headers" => $additionalHeaders]);
+        $preparedHeaders = $buildHeadersMethod->invokeArgs($client, [
+            "headers" => $additionalHeaders,
+        ]);
 
         // then
         $expectedHeaders = [
@@ -67,13 +69,17 @@ class ClientTest extends TestCase
     public function testValidResponseIsExtractedCorrectly(): void
     {
         // given
-        $validResponse = new Response(status: 200, body: json_encode(["test" => "value"]));
+        $validResponse = new Response(status: 200, body: json_encode([
+            "test" => "value",
+        ]));
 
         $client = new Client(new GuzzleClient(), new Config("host", "tenant"));
         $extractResponseMethod = $this->getProtectedMethod(Client::class, "extractResponse");
 
         // when
-        $responseContent = $extractResponseMethod->invokeArgs($client, ["response" => $validResponse]);
+        $responseContent = $extractResponseMethod->invokeArgs($client, [
+            "response" => $validResponse,
+        ]);
 
         // then
         $this->assertIsArray($responseContent);
@@ -96,14 +102,16 @@ class ClientTest extends TestCase
         $this->expectExceptionMessage("An error occurred during retrieving response from the Identifier service.");
 
         // when
-        $extractResponseMethod->invokeArgs($client, ["response" => $validResponse]);
+        $extractResponseMethod->invokeArgs($client, [
+            "response" => $validResponse,
+        ]);
     }
 
     protected function assertHeaders(array $expectedHeaders, array $preparedHeaders): void
     {
         foreach ($expectedHeaders as $headerName => $headerValue) {
             $this->assertArrayHasKey($headerName, $preparedHeaders);
-            $this->assertEquals($headerValue, $preparedHeaders[$headerName], "Expected value (${headerValue}) for header (${headerName}) is not equal with (${preparedHeaders[$headerName]})");
+            $this->assertSame($headerValue, $preparedHeaders[$headerName], "Expected value (${headerValue}) for header (${headerName}) is not the same as (${preparedHeaders[$headerName]})");
         }
     }
 }
