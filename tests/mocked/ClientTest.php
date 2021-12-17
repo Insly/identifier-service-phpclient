@@ -61,10 +61,13 @@ class ClientTest extends TestCase
         $this->assertHeaders($expectedHeaders, $preparedHeaders);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function testValidResponseIsExtractedCorrectly(): void
     {
         // given
-        $validResponse = new Response(status: 200, headers: [], body: json_encode(["test" => "value"]));
+        $validResponse = new Response(status: 200, body: json_encode(["test" => "value"]));
 
         $client = new Client(new GuzzleClient(), new Config("host", "tenant"));
         $extractResponseMethod = $this->getProtectedMethod(Client::class, "extractResponse");
@@ -77,10 +80,13 @@ class ClientTest extends TestCase
         $this->assertArrayHasKey("test", $responseContent);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function testProperExceptionIsThrownDuringResponseExtracting(): void
     {
         // given
-        $validResponse = new Response(status: 200, headers: [], body: null);
+        $validResponse = new Response(status: 200, body: null);
 
         $client = new Client(new GuzzleClient(), new Config("host", "tenant"));
         $extractResponseMethod = $this->getProtectedMethod(Client::class, "extractResponse");
