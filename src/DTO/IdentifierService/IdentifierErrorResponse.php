@@ -9,7 +9,7 @@ use Insly\Identifier\Client\DTO\IdentifierService\Response\Error;
 class IdentifierErrorResponse
 {
     /**
-     * @param Error[] $errors
+     * @param array<Error> $errors
      */
     public function __construct(
         protected array $errors,
