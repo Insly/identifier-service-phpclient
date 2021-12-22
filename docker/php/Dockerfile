@@ -16,4 +16,5 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
     && echo "xdebug.client_port=${XDEBUG_CLIENT_PORT}" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.mode=${XDEBUG_MODE}" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.start_with_request=${XDEBUG_START_WITH_REQUEST}" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.log_level=0" >> /usr/local/etc/php/conf.d/xdebug.ini \
 ;fi
