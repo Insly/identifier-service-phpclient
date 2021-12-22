@@ -67,6 +67,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use GuzzleHttp\Client as Guzzle;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
@@ -75,9 +77,9 @@ class CognitoServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(Client::class, function (): Client {
+        $this->app->bind(Client::class, function (Application $app): Client {
             $config = new Config("https://example.com/api/v1/", "tenant");
-            $request = request();
+            $request = $app->make(Request::class);
             
             $authorizationHeader = $request?->header("Authorization") ?? "";
             $token = str_replace("Bearer ", "", $authorizationHeader);
