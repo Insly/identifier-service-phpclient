@@ -58,18 +58,14 @@ class ErrorResponseHandlerTest extends TestCase
      */
     public function testClientIsNotValidateCorrectResponse(): void
     {
-        // given
         $response = new Response(status: 200, body: json_encode([]));
-
         $client = new Client(new GuzzleClient(), new Config("host", "tenant"));
         $validateResponseMethod = $this->getProtectedMethod(Client::class, "validateResponse");
 
-        // when
         $validateResponseMethod->invokeArgs($client, [
             "response" => $response,
         ]);
 
-        // then
         $this->expectNotToPerformAssertions();
     }
 
@@ -78,17 +74,13 @@ class ErrorResponseHandlerTest extends TestCase
      */
     public function testClientIsAbleToHandleUndefinedErrorCodeResponse(): void
     {
-        // given
+        $this->expectException(UndefinedErrorCodeException::class);
+
         $responseArray = Standard::getUndefinedErrorCodeExceptionResponse();
         $response = new Response(status: 400, body: json_encode($responseArray));
-
         $client = new Client(new GuzzleClient(), new Config("host", "tenant"));
         $validateResponseMethod = $this->getProtectedMethod(Client::class, "validateResponse");
 
-        // then
-        $this->expectException(UndefinedErrorCodeException::class);
-
-        // when
         $validateResponseMethod->invokeArgs($client, [
             "response" => $response,
         ]);
@@ -100,19 +92,15 @@ class ErrorResponseHandlerTest extends TestCase
      */
     public function testClientIsAbleToHandleErrorResponse(string $exceptionClass, array $responseArray, string $errorCode): void
     {
-        // given
-        $response = new Response(status: 400, body: json_encode($responseArray));
-
-        $client = new Client(new GuzzleClient(), new Config("host", "tenant"));
-        $validateResponseMethod = $this->getProtectedMethod(Client::class, "validateResponse");
-
-        // then
         $this->expectException($exceptionClass);
-        // check if errorCode exist in the exception message
+        // check if errorCode exists in the exception message
         $errorCodeRegex = "/${errorCode}/";
         $this->expectExceptionMessageMatches($errorCodeRegex);
 
-        // when
+        $response = new Response(status: 400, body: json_encode($responseArray));
+        $client = new Client(new GuzzleClient(), new Config("host", "tenant"));
+        $validateResponseMethod = $this->getProtectedMethod(Client::class, "validateResponse");
+
         $validateResponseMethod->invokeArgs($client, [
             "response" => $response,
         ]);
