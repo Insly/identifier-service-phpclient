@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Insly\Identifier\Client;
 
 use GuzzleHttp\Psr7\Request;
-use Insly\Identifier\Client\DTO\IdentifierService\IdentifierErrorResponse;
+use Insly\Identifier\Client\Entities\Builders\IdentifierErrorResponseBuilder;
 use Insly\Identifier\Client\Entities\Builders\UserBuilder;
 use Insly\Identifier\Client\Entities\User;
 use Insly\Identifier\Client\Exceptions\ExtractResponseException;
@@ -203,7 +203,7 @@ class Client
     {
         if ($response->getStatusCode() !== Response::HTTP_OK) {
             $responseContent = $this->extractResponse($response);
-            $identifierErrorResponse = IdentifierErrorResponse::fromResponseContent($responseContent, $response->getStatusCode());
+            $identifierErrorResponse = IdentifierErrorResponseBuilder::fromResponseContent($responseContent, $response->getStatusCode());
 
             $responseHandler = new IdentifierResponseHandler();
             $responseHandler->handle($identifierErrorResponse);

@@ -17,17 +17,6 @@ class IdentifierErrorResponse
     ) {
     }
 
-    public static function fromResponseContent(array $responseContent, int $statusCode): static
-    {
-        $errors = $responseContent["errors"];
-
-        foreach ($errors as &$error) {
-            $error = new Error(message: $error["message"], errorCode: $error["code"]);
-        }
-
-        return new static($errors, $statusCode);
-    }
-
     /**
      * @return Error[]
      */
