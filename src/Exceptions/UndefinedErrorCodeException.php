@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Insly\Identifier\Client\Exceptions;
 
-interface ValidationExceptionContract
+class UndefinedErrorCodeException extends IdentifierServiceClientException
 {
 }

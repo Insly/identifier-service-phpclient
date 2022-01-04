@@ -11,13 +11,13 @@
   ],
   "require": {
     "php": "^8.0",
-    "guzzlehttp/guzzle": "^7.2",
-    "symfony/http-foundation": "^5.3"
+    "guzzlehttp/guzzle": "^7.4",
+    "symfony/http-foundation": "^5.4"
   },
   "require-dev": {
-    "blumilksoftware/codestyle": "^0.4",
+    "blumilksoftware/codestyle": "^0.8",
     "phpunit/phpunit": "^9.5",
-    "vlucas/phpdotenv": "^5.3"
+    "vlucas/phpdotenv": "^5.4"
   },
   "autoload": {
     "psr-4": {
@@ -27,8 +27,7 @@
   "scripts": {
     "ecs": "./vendor/bin/ecs check --clear-cache",
     "ecsf": "./vendor/bin/ecs check --clear-cache --fix",
-    "test": "./vendor/bin/phpunit tests/mocked",
-    "e2e": "./vendor/bin/phpunit tests/e2e"
+    "test": "./vendor/bin/phpunit tests/mocked"
   },
   "config": {
     "optimize-autoloader": true,

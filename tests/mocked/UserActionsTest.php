@@ -6,9 +6,10 @@ use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Psr7\Response;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
+use Insly\Identifier\Client\Exceptions\ExtractResponseException;
+use Insly\Identifier\Client\Exceptions\IdentifierService\NotAuthorizedException;
 use Insly\Identifier\Client\Exceptions\NoTokenException;
 use Insly\Identifier\Client\Exceptions\NoUserCustomDataException;
-use Insly\Identifier\Client\Exceptions\TokenExpiredException;
 use Insly\Identifier\Client\Testing\LoginMocks;
 use Insly\Identifier\Client\Testing\UserMocks;
 use PHPUnit\Framework\TestCase;
@@ -27,6 +28,8 @@ class UserActionsTest extends TestCase
 
     /**
      * @throws ClientExceptionInterface
+     * @throws NoTokenException
+     * @throws ExtractResponseException
      */
     public function testRetrievingUserWithoutTokenProvided(): void
     {
@@ -38,6 +41,7 @@ class UserActionsTest extends TestCase
 
     /**
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
      * @throws NoTokenException
      */
     public function testRetrievingUserWithExpiredToken(): void
@@ -53,12 +57,13 @@ class UserActionsTest extends TestCase
             }
         };
 
-        $this->expectException(TokenExpiredException::class);
+        $this->expectException(NotAuthorizedException::class);
         $client->getUser();
     }
 
     /**
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
      * @throws NoTokenException
      */
     public function testRetrievingUser(): void
@@ -80,7 +85,7 @@ class UserActionsTest extends TestCase
 
     /**
      * @throws ClientExceptionInterface
-     * @throws NoUserCustomDataException
+     * @throws ExtractResponseException
      * @throws NoTokenException
      */
     public function testRetrievingUserWithCustomData(): void
@@ -101,8 +106,9 @@ class UserActionsTest extends TestCase
     }
 
     /**
-     * @throws NoTokenException
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws NoTokenException
      */
     public function testRetrievingUserWithNoCustomData(): void
     {
@@ -124,8 +130,10 @@ class UserActionsTest extends TestCase
     }
 
     /**
-     * @throws NoTokenException
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws NoTokenException
+     * @throws NoUserCustomDataException
      */
     public function testRetrievingUserWithNoRequiredCustomData(): void
     {

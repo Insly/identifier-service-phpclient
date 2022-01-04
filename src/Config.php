@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Insly\Identifier\Client;
 
-use Insly\Identifier\Client\Exceptions\InvalidHostFormatException;
-
 class Config
 {
     protected string $tenant = "";
@@ -14,9 +12,6 @@ class Config
     protected string $username = "";
     protected string $password = "";
 
-    /**
-     * @throws InvalidHostFormatException
-     */
     public function __construct(string $host, string $tenant)
     {
         $this->setHost($host);
@@ -28,15 +23,10 @@ class Config
         return $this->host;
     }
 
-    /**
-     * @throws InvalidHostFormatException
-     */
-    public function setHost(string $host, bool $validate = true): void
+    public function setHost(string $host): void
     {
-        if ($validate) {
-            if (substr($host, -1) !== "/") {
-                throw new InvalidHostFormatException("Host must be ending with slash sign.");
-            }
+        if (!str_ends_with($host, "/")) {
+            $host .= "/";
         }
 
         $this->host = $host;

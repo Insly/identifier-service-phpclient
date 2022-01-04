@@ -67,6 +67,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use GuzzleHttp\Client as Guzzle;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
@@ -75,9 +77,13 @@ class CognitoServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(Client::class, function (): Client {
+        $this->app->bind(Client::class, function (Application $app): Client {
             $config = new Config("https://example.com/api/v1/", "tenant");
-            $config->setToken(config("auth.cognito.token"));
+            $request = $app->make(Request::class);
+            
+            $authorizationHeader = $request?->header("Authorization") ?? "";
+            $token = str_replace("Bearer ", "", $authorizationHeader);
+            $config->setToken($token);
 
             return new Client(new Guzzle(), $config);
         });
@@ -116,12 +122,57 @@ COGNITO_PASSWORD=
 
 ## Development
 
+### Run
+
+```bash
+cp .env.example .env
+
+make build
+make run
+
+# enter container shell
+make shell
+# in container shell
+composer install
+
+# stop container
+make stop
+```
+
+If you don't have `make`, then check _Makefile_ for used commands.
+
 ### Testing
+
+#### Troubleshoots
+
+If you have problems with tests, try to remove:
+- vendor
+- composer.lock
+- .composer
 
 #### Basic tests
 
 There are multiple tests with mocked responses. You can run them with:
 
+
+```bash
+# Tests will run in the new container specified in docker-compose (php service):
+make test
 ```
+or inside container
+```bash
 composer test
 ```
+
+#### Test with specific PHP version
+
+If you want to run tests with specific PHP version, just run:
+```bash
+# Tests will run in new container
+make test-php-version
+```
+The default version is `8.0` - defined in the Makefile. You can define other version in `.env` file, just add: e.g. `TESTS_PHP_VERSION=7.2`\
+You can also specify `APP_DIR` in `.env` file, which is used in _test-php-version_ command.\
+Otherwise, default value defined in the Makefile will be used.
+
+Remember to remove `composer.lock` and rerun `composer install` after testing, cause tests reinstall composer packages. 

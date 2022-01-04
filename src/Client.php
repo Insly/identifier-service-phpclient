@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Insly\Identifier\Client;
 
 use GuzzleHttp\Psr7\Request;
+use Insly\Identifier\Client\Entities\Builders\IdentifierErrorResponseBuilder;
 use Insly\Identifier\Client\Entities\Builders\UserBuilder;
 use Insly\Identifier\Client\Entities\User;
-use Insly\Identifier\Client\Exceptions\Handlers\HeaderTokenExpired;
-use Insly\Identifier\Client\Exceptions\Handlers\NotAuthorized;
-use Insly\Identifier\Client\Exceptions\Handlers\ResponseExceptionHandler;
-use Insly\Identifier\Client\Exceptions\Handlers\TokenExpired;
-use Insly\Identifier\Client\Exceptions\Handlers\UnknownError;
+use Insly\Identifier\Client\Exceptions\ExtractResponseException;
+use Insly\Identifier\Client\Exceptions\Handlers\IdentifierResponseHandler;
+use Insly\Identifier\Client\Exceptions\IdentifierServiceClientException;
 use Insly\Identifier\Client\Exceptions\NoTokenException;
-use Insly\Identifier\Client\Exceptions\ValidationExceptionContract;
+use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -23,14 +22,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Client
 {
-    protected ClientInterface $client;
-    protected Config $config;
     protected string $token = "";
 
-    public function __construct(ClientInterface $client, Config $config)
-    {
-        $this->client = $client;
-        $this->config = $config;
+    public function __construct(
+        protected ClientInterface $client,
+        protected Config $config,
+    ) {
         $this->token = $config->getToken();
     }
 
@@ -41,7 +38,9 @@ class Client
 
     /**
      * @throws ClientExceptionInterface
-     * @throws ValidationExceptionContract
+     * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
      */
     public function login(): ResponseInterface
     {
@@ -51,11 +50,11 @@ class Client
             "password" => $this->config->getPassword(),
         ];
 
-        $request = new Request(RequestMethod::METHOD_POST, $endpoint, [], json_encode($credentials));
+        $request = new Request(RequestMethod::METHOD_POST, $endpoint, [], json_encode($credentials, flags: JSON_THROW_ON_ERROR));
         $response = $this->sendRequest($request);
-        $this->validateResponse($response, [new NotAuthorized()]);
+        $this->validateResponse($response);
 
-        $content = json_decode($response->getBody()->getContents(), true);
+        $content = $this->extractResponse($response);
         $this->token = $content["authentication_result"]["access_token"] ?? "";
 
         return $response;
@@ -63,6 +62,9 @@ class Client
 
     /**
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
      * @throws NoTokenException
      */
     public function logout(): void
@@ -71,11 +73,16 @@ class Client
 
         $endpoint = $this->config->getHost() . "logout";
         $request = new Request(RequestMethod::METHOD_GET, $endpoint, $this->buildHeaders());
-        $this->sendRequest($request);
+
+        $response = $this->sendRequest($request);
+        $this->validateResponse($response);
     }
 
     /**
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
      */
     public function client(string $id, string $secret, string $scope): array
     {
@@ -89,16 +96,21 @@ class Client
                     "client_id" => $id,
                     "client_secret" => $secret,
                     "scope" => $scope,
-                ]
-            )
+                ],
+                flags: JSON_THROW_ON_ERROR,
+            ),
         );
         $response = $this->sendRequest($request);
+        $this->validateResponse($response);
 
-        return json_decode($response->getBody()->getContents(), true);
+        return $this->extractResponse($response);
     }
 
     /**
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
      */
     public function refresh(string $refreshToken, string $username): array
     {
@@ -110,15 +122,19 @@ class Client
             [
                 "refresh_token" => $refreshToken,
                 "username" => $username,
-            ]
+            ],
         );
         $response = $this->sendRequest($request);
+        $this->validateResponse($response);
 
-        return json_decode($response->getBody()->getContents(), true);
+        return $this->extractResponse($response);
     }
 
     /**
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
      */
     public function validate(string $accessToken): array
     {
@@ -130,17 +146,21 @@ class Client
             json_encode(
                 [
                     "access_token" => $accessToken,
-                ]
+                ],
+                flags: JSON_THROW_ON_ERROR,
             ),
         );
         $response = $this->sendRequest($request);
+        $this->validateResponse($response);
 
-        return json_decode($response->getBody()->getContents(), true);
+        return $this->extractResponse($response);
     }
 
     /**
-     * @throws ValidationExceptionContract
      * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
      * @throws NoTokenException
      */
     public function getUser(): User
@@ -153,15 +173,17 @@ class Client
         $response = $this->sendRequest($request);
         $this->validateResponse($response);
 
-        return UserBuilder::buildFromResponse(json_decode($response->getBody()->getContents(), true));
+        return UserBuilder::buildFromResponse($this->extractResponse($response));
     }
 
-    protected function buildHeaders(string ...$headers): array
+    protected function buildHeaders(array $headers = []): array
     {
-        return [
-            "Authorization" => "Bearer " . $this->token,
-            ...$headers,
-        ];
+        return array_merge(
+            [
+                "Authorization" => "Bearer " . $this->token,
+            ],
+            $headers,
+        );
     }
 
     /**
@@ -172,22 +194,19 @@ class Client
         return $this->client->sendRequest($request);
     }
 
-    protected function validateResponse(ResponseInterface $response, array $handlers = []): void
+    /**
+     * @throws IdentifierServiceClientException
+     * @throws ExtractResponseException
+     * @throws JsonException
+     */
+    protected function validateResponse(ResponseInterface $response): void
     {
         if ($response->getStatusCode() !== Response::HTTP_OK) {
-            $content = json_decode($response->getBody()->getContents(), true);
+            $responseContent = $this->extractResponse($response);
+            $identifierErrorResponse = IdentifierErrorResponseBuilder::fromResponseContent($responseContent, $response->getStatusCode());
 
-            $handlers = [
-                new HeaderTokenExpired(),
-                new TokenExpired(),
-                new UnknownError(),
-                ...$handlers,
-            ];
-
-            /** @var ResponseExceptionHandler $handler */
-            foreach ($handlers as $handler) {
-                $handler->validate($content["errors"]);
-            }
+            $responseHandler = new IdentifierResponseHandler();
+            $responseHandler->handle($identifierErrorResponse);
         }
     }
 
@@ -198,6 +217,18 @@ class Client
     {
         if (empty($this->token)) {
             throw new NoTokenException();
+        }
+    }
+
+    /**
+     * @throws ExtractResponseException
+     */
+    protected function extractResponse(ResponseInterface $response): array
+    {
+        try {
+            return json_decode($response->getBody()->getContents(), associative: true, flags: JSON_THROW_ON_ERROR);
+        } catch (JsonException $exception) {
+            throw new ExtractResponseException(previous: $exception);
         }
     }
 }
