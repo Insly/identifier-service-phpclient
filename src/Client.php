@@ -37,17 +37,31 @@ class Client
     }
 
     /**
-     * @throws ClientExceptionInterface
      * @throws ExtractResponseException
      * @throws IdentifierServiceClientException
      * @throws JsonException
      */
     public function login(): ResponseInterface
     {
+        return $this->loginWithPassword(
+            $this->config->getUsername(),
+            $this->config->getPassword(),
+            $this->config->getLoginMeta(),
+        );
+    }
+
+    /**
+     * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
+     */
+    public function loginWithPassword(string $username, string $password, array $meta): ResponseInterface
+    {
         $endpoint = $this->config->getHost() . "login/" . $this->config->getTenant();
         $credentials = [
-            "username" => $this->config->getUsername(),
-            "password" => $this->config->getPassword(),
+            "username" => $username,
+            "password" => $password,
+            "meta_data" => $meta,
         ];
 
         $request = new Request(RequestMethod::METHOD_POST, $endpoint, [], json_encode($credentials, flags: JSON_THROW_ON_ERROR));
