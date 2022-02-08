@@ -11,6 +11,7 @@ class Config
     protected string $token = "";
     protected string $username = "";
     protected string $password = "";
+    protected array $loginMeta = [];
 
     public function __construct(string $host, string $tenant)
     {
@@ -70,5 +71,15 @@ class Config
     public function setUsername(string $username): void
     {
         $this->username = $username;
+    }
+
+    public function getLoginMeta(): array
+    {
+        return $this->loginMeta;
+    }
+
+    public function setLoginMeta(array $meta): void
+    {
+        $this->loginMeta = $meta;
     }
 }

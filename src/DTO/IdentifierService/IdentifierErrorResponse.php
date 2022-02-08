@@ -18,7 +18,7 @@ class IdentifierErrorResponse
     }
 
     /**
-     * @return Error[]
+     * @return array<Error>
      */
     public function getErrors(): array
     {

@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 use GuzzleHttp\Client as Guzzle;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Insly\Identifier\Client\Client;
 use Insly\Identifier\Client\Config;
@@ -10,6 +13,7 @@ use Insly\Identifier\Client\Exceptions\ExtractResponseException;
 use Insly\Identifier\Client\Exceptions\IdentifierService\NotAuthorizedException;
 use Insly\Identifier\Client\Exceptions\IdentifierService\UndefinedErrorException;
 use Insly\Identifier\Client\Testing\LoginMocks;
+use Insly\Identifier\Client\Testing\RequestMocks;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
@@ -41,6 +45,36 @@ class LoginActionsTest extends TestCase
 
         $client->login();
         $this->assertSame("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", $client->getAccessToken());
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws JsonException
+     */
+    public function testProperAuthenticationWithPassword(): void
+    {
+        $requestHistory = [];
+        $mockHandler = new MockHandler([
+            new Response(200, [], json_encode(LoginMocks::getResponse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"))),
+        ]);
+        $handlerStack = HandlerStack::create($mockHandler);
+        $handlerStack->push(Middleware::history($requestHistory));
+
+        $client = new Client(new Guzzle([
+            "handler" => $handlerStack,
+        ]), $this->config);
+        $client->loginWithPassword("foo-user", "foo-password", [
+            "foo" => "foo-meta",
+        ]);
+
+        $this->assertCount(1, $requestHistory);
+        $this->assertJsonStringEqualsJsonString(
+            json_encode(RequestMocks::getLogin("foo-user", "foo-password", [
+                "foo" => "foo-meta",
+            ])),
+            $requestHistory[0]["request"]->getBody()->getContents(),
+        );
     }
 
     /**
