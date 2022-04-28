@@ -12,7 +12,7 @@
   "require": {
     "php": "^8.0",
     "guzzlehttp/guzzle": "^7.4",
-    "symfony/http-foundation": "^5.4"
+    "symfony/http-foundation": "^5.4|^6.0"
   },
   "require-dev": {
     "blumilksoftware/codestyle": "^0.8",
