@@ -72,6 +72,11 @@ class User
         return $this->customAttributes[static::CUSTOM_PREFIX . $key] ?? null;
     }
 
+    public function getCustomAttributes(): array
+    {
+        return $this->customAttributes;
+    }
+
     /**
      * @throws NoUserCustomDataException
      */
