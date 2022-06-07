@@ -15,6 +15,7 @@ class User
     protected string $emailVerified;
     protected string $name;
     protected string $sub;
+    protected ?string $profile;
     protected array $customAttributes = [];
 
     public function getId(): string
@@ -65,6 +66,16 @@ class User
     public function setSub(string $sub): void
     {
         $this->sub = $sub;
+    }
+
+    public function setProfile(?string $profile): void
+    {
+        $this->profile = $profile;
+    }
+
+    public function getProfile(): ?string
+    {
+        return $this->profile;
     }
 
     public function getCustom(string $key): ?string
