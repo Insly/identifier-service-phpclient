@@ -75,7 +75,7 @@ class User
 
     public function getProfile(): ?string
     {
-        return $this->profile;
+        return $this->profile ?? null;
     }
 
     public function getCustom(string $key): ?string
