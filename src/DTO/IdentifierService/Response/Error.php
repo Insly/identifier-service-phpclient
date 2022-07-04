@@ -9,8 +9,7 @@ class Error
     public function __construct(
         protected string $message,
         protected string $errorCode,
-    ) {
-    }
+    ) {}
 
     public function getMessage(): string
     {

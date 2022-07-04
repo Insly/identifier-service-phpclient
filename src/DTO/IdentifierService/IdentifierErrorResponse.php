@@ -14,8 +14,7 @@ class IdentifierErrorResponse
     public function __construct(
         protected array $errors,
         protected int $statusCode,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<Error>
