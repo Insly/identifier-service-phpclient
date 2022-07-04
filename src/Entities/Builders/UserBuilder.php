@@ -8,10 +8,6 @@ use Insly\Identifier\Client\Entities\User;
 
 class UserBuilder
 {
-    protected function __construct()
-    {
-    }
-
     public static function buildFromResponse(array $userData): User
     {
         $user = new User();

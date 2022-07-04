@@ -15,7 +15,7 @@
     "symfony/http-foundation": "^5.4|^6.0"
   },
   "require-dev": {
-    "blumilksoftware/codestyle": "^0.8",
+    "blumilksoftware/codestyle": "^1.6.0",
     "phpunit/phpunit": "^9.5",
     "vlucas/phpdotenv": "^5.4"
   },
@@ -25,8 +25,8 @@
     }
   },
   "scripts": {
-    "ecs": "./vendor/bin/ecs check --clear-cache",
-    "ecsf": "./vendor/bin/ecs check --clear-cache --fix",
+    "cs": "./vendor/bin/php-cs-fixer fix --dry-run --diff --config codestyle.php",
+    "csf":  "./vendor/bin/php-cs-fixer fix --diff --config codestyle.php",
     "test": "./vendor/bin/phpunit tests/mocked"
   },
   "config": {

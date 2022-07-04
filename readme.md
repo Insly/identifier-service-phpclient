@@ -162,6 +162,12 @@ make test
 or inside container
 ```bash
 composer test
+
+#### Codestyle tests
+Run codestyle test or codestyle fixer in the container:
+```bash
+composer cs
+composer csf
 ```
 
 #### Test with specific PHP version
