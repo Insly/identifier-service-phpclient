@@ -14,7 +14,7 @@ class UserBuilder
 
         $user->setId($userData["id"]);
         $user->setEmail($userData["user_attributes"]["email"]);
-        $user->setEmailVerified($userData["user_attributes"]["email_verified"]);
+        $user->setEmailVerified($userData["user_attributes"]["email_verified"] ?? "");
         $user->setName($userData["user_attributes"]["name"]);
         $user->setSub($userData["user_attributes"]["sub"]);
         $user->setProfile($userData["user_attributes"]["profile"] ?? null);
