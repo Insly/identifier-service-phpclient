@@ -10,10 +10,10 @@
     }
   ],
   "require": {
-    "php": "^7.2",
+    "php": "^7.4",
     "ext-json": "*",
-    "guzzlehttp/guzzle": "^6.2",
-    "symfony/http-foundation": "^4.2",
+    "guzzlehttp/guzzle": "^7.5",
+    "symfony/http-foundation": "^4.2|^5.0",
     "symfony/polyfill": "^1.10"
   },
   "require-dev": {
@@ -33,6 +33,9 @@
   },
   "config": {
     "optimize-autoloader": true,
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
