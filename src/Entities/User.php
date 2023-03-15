@@ -17,6 +17,7 @@ class User
     protected string $sub;
     protected ?string $profile;
     protected array $customAttributes = [];
+    protected array $apiGroups = [];
 
     public function getId(): string
     {
@@ -99,5 +100,15 @@ class User
     public function setCustom(string $key, string $value): void
     {
         $this->customAttributes[$key] = $value;
+    }
+
+    public function setApiGroups(array $groups): void
+    {
+        $this->apiGroups = $groups;
+    }
+
+    public function getApiGroups(): array
+    {
+        return $this->apiGroups;
     }
 }
