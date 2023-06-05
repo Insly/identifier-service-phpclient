@@ -94,7 +94,7 @@ class ErrorResponseHandlerTest extends TestCase
     {
         $this->expectException($exceptionClass);
         // check if errorCode exists in the exception message
-        $errorCodeRegex = "/${errorCode}/";
+        $errorCodeRegex = "/{$errorCode}/";
         $this->expectExceptionMessageMatches($errorCodeRegex);
 
         $response = new Response(status: 400, body: json_encode($responseArray));
