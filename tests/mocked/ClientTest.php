@@ -93,7 +93,7 @@ class ClientTest extends TestCase
     {
         foreach ($expectedHeaders as $headerName => $headerValue) {
             $this->assertArrayHasKey($headerName, $preparedHeaders);
-            $this->assertSame($headerValue, $preparedHeaders[$headerName], "Expected value (${headerValue}) for header (${headerName}) is not the same as (${preparedHeaders[$headerName]})");
+            $this->assertSame($headerValue, $preparedHeaders[$headerName], "Expected value ({$headerValue}) for header ({$headerName}) is not the same as ({$preparedHeaders[$headerName]})");
         }
     }
 }
