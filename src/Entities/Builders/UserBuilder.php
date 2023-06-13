@@ -29,7 +29,7 @@ class UserBuilder
             $user->setCustom($key, $value);
         }
 
-        $apiGroupsStr = $userData['user_attributes']['api_cognito_groups'] ?? '';
+        $apiGroupsStr = $userData["user_attributes"]["api_cognito_groups"] ?? "";
         if (!empty($apiGroupsStr)) {
             $apiGroups = json_decode($apiGroupsStr, true);
             $user->setApiGroups($apiGroups);
