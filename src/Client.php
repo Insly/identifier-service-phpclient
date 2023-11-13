@@ -190,6 +190,32 @@ class Client
         return UserBuilder::buildFromResponse($this->extractResponse($response));
     }
 
+    /**
+     * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
+     * @throws NoTokenException
+     */
+    public function forcePasswordReset(string $username): void
+    {
+        $this->validateToken();
+
+        $endpoint = $this->config->getHost() . "password/force_reset/" . $this->config->getTenant();
+        $request = new Request(
+            RequestMethod::METHOD_POST,
+            $endpoint,
+            $this->buildHeaders(),
+            \GuzzleHttp\json_encode([
+                "Username" => $username,
+            ])
+        );
+
+        $response = $this->sendRequest($request);
+        $this->validateResponse($response);
+    }
+
+
     protected function buildHeaders(array $headers = []): array
     {
         return array_merge(
