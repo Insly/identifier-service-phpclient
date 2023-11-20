@@ -172,6 +172,28 @@ class Client
         return UserBuilder::buildFromResponse(json_decode($response->getBody()->getContents(), true));
     }
 
+    /**
+     * @throws GuzzleException
+     * @throws NoTokenException
+     */
+    public function forcePasswordReset(string $username): void
+    {
+        $this->validateToken();
+
+        $endpoint = $this->config->getHost() . "password/force_reset/" . $this->config->getTenant();
+        $request = new Request(
+            RequestMethod::METHOD_POST,
+            $endpoint,
+            $this->buildHeaders(),
+            \GuzzleHttp\json_encode([
+                "Username" => $username,
+            ])
+        );
+
+        $response = $this->sendRequest($request);
+        $this->validateResponse($response);
+    }
+
     protected function buildHeaders(string ...$headers): array
     {
         return array_merge(
