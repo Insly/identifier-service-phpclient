@@ -51,6 +51,7 @@ class Client
     }
 
     /**
+     * @throws ClientExceptionInterface
      * @throws ExtractResponseException
      * @throws IdentifierServiceClientException
      * @throws JsonException
@@ -133,10 +134,13 @@ class Client
             RequestMethod::METHOD_POST,
             $endpoint,
             $this->buildHeaders(),
-            [
-                "refresh_token" => $refreshToken,
-                "username" => $username,
-            ],
+            json_encode(
+                [
+                    "refresh_token" => $refreshToken,
+                    "username" => $username,
+                ],
+                flags: JSON_THROW_ON_ERROR,
+            ),
         );
         $response = $this->sendRequest($request);
         $this->validateResponse($response);
@@ -206,9 +210,12 @@ class Client
             RequestMethod::METHOD_POST,
             $endpoint,
             $this->buildHeaders(),
-            \GuzzleHttp\json_encode([
-                "Username" => $username,
-            ])
+            json_encode(
+                [
+                    "Username" => $username,
+                ],
+                flags: JSON_THROW_ON_ERROR,
+            )
         );
 
         $response = $this->sendRequest($request);
