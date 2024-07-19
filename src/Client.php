@@ -201,7 +201,7 @@ class Client
      * @throws JsonException
      * @throws NoTokenException
      */
-    public function forcePasswordReset(string $username): array
+    public function forcePasswordReset(string $username): void
     {
         $this->validateToken();
 
@@ -220,8 +220,6 @@ class Client
 
         $response = $this->sendRequest($request);
         $this->validateResponse($response);
-
-        return $this->extractResponse($response);
     }
 
     protected function buildHeaders(array $headers = []): array
