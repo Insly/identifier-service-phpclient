@@ -215,7 +215,7 @@ class Client
                     "Username" => $username,
                 ],
                 flags: JSON_THROW_ON_ERROR,
-            )
+            ),
         );
 
         $response = $this->sendRequest($request);
