@@ -51,6 +51,7 @@ class Client
     }
 
     /**
+     * @throws ClientExceptionInterface
      * @throws ExtractResponseException
      * @throws IdentifierServiceClientException
      * @throws JsonException
@@ -133,10 +134,13 @@ class Client
             RequestMethod::METHOD_POST,
             $endpoint,
             $this->buildHeaders(),
-            [
-                "refresh_token" => $refreshToken,
-                "username" => $username,
-            ],
+            json_encode(
+                [
+                    "refresh_token" => $refreshToken,
+                    "username" => $username,
+                ],
+                flags: JSON_THROW_ON_ERROR,
+            ),
         );
         $response = $this->sendRequest($request);
         $this->validateResponse($response);
@@ -188,6 +192,34 @@ class Client
         $this->validateResponse($response);
 
         return UserBuilder::buildFromResponse($this->extractResponse($response));
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws ExtractResponseException
+     * @throws IdentifierServiceClientException
+     * @throws JsonException
+     * @throws NoTokenException
+     */
+    public function forcePasswordReset(string $username): void
+    {
+        $this->validateToken();
+
+        $endpoint = $this->config->getHost() . "password/force_reset/" . $this->config->getTenant();
+        $request = new Request(
+            RequestMethod::METHOD_POST,
+            $endpoint,
+            $this->buildHeaders(),
+            json_encode(
+                [
+                    "Username" => $username,
+                ],
+                flags: JSON_THROW_ON_ERROR,
+            ),
+        );
+
+        $response = $this->sendRequest($request);
+        $this->validateResponse($response);
     }
 
     protected function buildHeaders(array $headers = []): array
